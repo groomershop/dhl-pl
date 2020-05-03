@@ -1,0 +1,539 @@
+<?php
+
+$isLm = $block->isLm();
+$days = $block->generateDays();
+$shipmentValues = $block->getShipmentValues();
+$shipments = $block->getShipmentsToSelect();
+$senders = $block->getSendersToSelect();
+$error = $block->getError();
+$isSas = $block->isSas();
+$isEk = $block->isEk();
+$canCourier = $block->canCourier();
+$countries = $block->getCountries();
+
+
+?>
+<div class="dhl24">
+
+<form action="<?php echo $block->getSaveUrl() ?>" method="post" id="shipmentForm">
+<?php echo $block->getBlockHtml('formkey')?>
+
+
+
+<input type="hidden" id="shipmentUrl" value="<?php echo $this->getUrl('dhl/shipment/shipment') ?>" />
+<input type="hidden" id="hoursUrl" value="<?php echo $this->getUrl('dhl/shipment/hours') ?>" />
+<input type="hidden" id="senderUrl" value="<?php echo $this->getUrl('dhl/shipment/sender') ?>" />
+<input type="hidden" id="recipientUrl" value="<?php echo $this->getUrl('dhl/shipment/recipient') ?>" />
+<input type="hidden" id="europeMapUrl" value="<?php echo $this->getUrl('dhl/shipment/europemap') ?>" />
+<input type="hidden" id="lmMapUrl" value="<?php echo $this->getUrl('dhl/shipment/lmmap') ?>" />
+<input type="hidden" name="order_id" id="order_id" value="<?php echo $block->getOrderId(); ?>" />
+<div class="form_header">
+            <span>
+                <div>Tworzenie przesyłki</div>
+            </span>
+</div>
+<div class="clear"></div>
+
+<?php if (is_array($shipments) && count($shipments) > 0): ?>
+<div class="form_content">
+    <div class="subcontent">
+        <div class="row">
+            <label for="shipment">Przesyłka</label>
+            <select name="shipment" id="shipment">
+                <?php foreach($shipments as $key=> $value):?>
+                <option value="<?php echo $value; ?>" <?php echo ($value == $this->fieldValue($shipmentValues, 'shipment')) ? 'selected="selected"' : ''; ?> ><?php echo $value; ?></option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+    </div>
+</div>
+
+<div class="clear"></div>
+    <?php endif; ?>
+<div class="form_content">
+    <div class="subcontent">
+        <div class="row">
+            <label for="shipment">Płatnik jest</label>
+            <div class="platnik-strona-radio">
+                <input type="radio"id="payerN" class="payer" name="payer" value="N" <?php echo ($this->fieldValue($shipmentValues, 'payer') == 'N') ? 'checked': ''; ?> /><label for="payerN">Nadawcą</label>
+                <br />
+                <input type="radio" id="payerO" class="payer" name="payer" value="O" <?php echo ($this->fieldValue($shipmentValues, 'payer') == 'O') ? 'checked': ''; ?> /><label for="payerO">Odbiorcą</label>
+                <br />
+                <input type="radio" id="payerT" class="payer" name="payer" value="T" <?php echo ($this->fieldValue($shipmentValues, 'payer') == 'T') ? 'checked': ''; ?> /><label for="payerT">Zleceniodawcą</label>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="clear"></div>
+<div class="form_header">
+            <span>
+                <div>Nadawca</div>
+                <div class="odb">Odbiorca</div>
+            </span>
+</div>
+<div class="form_content">
+    <div class="subcontent" >
+        <div id="div_nadawca" class="row">
+            <label for="name">Nazwa</label>
+            <select name="name" id="name">
+                <?php foreach($senders as $key=> $value):?>
+                <option value="<?php echo $value; ?>" <?php echo ($value == $this->fieldValue($shipmentValues, 'name')) ? 'selected="selected"' : ''; ?> ><?php echo $value; ?></option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+        <div class="row " id="div_nadawca2">
+            <label class="" for="name2">Nazwa nadawcy</label><input type="text" maxlength="60" id="name2" name="name2" value="<?php echo $this->fieldValue($shipmentValues, 'name2') ?>" />
+        </div>
+        <div class="row ">
+            <label class="" for="postcode">Kod pocztowy</label><input type="text" maxlength="60" id="postcode" name="postcode" value="<?php echo $this->fieldValue($shipmentValues, 'postcode')?>" />
+        </div>
+        <div class="row">
+            <label class="" for="city">Miejscowość</label><input type="text" maxlength="60" id="city" name="city" value="<?php echo $this->fieldValue($shipmentValues, 'city')?>" />
+        </div>
+        <div class="row">
+            <label class="" for="street">Ulica</label><input type="text" maxlength="60" id="street" name="street" value="<?php echo $this->fieldValue($shipmentValues, 'street')?>" />
+        </div>
+        <div class="row">
+            <label class="" for="houseNumber">Numer domu</label><input type="text" maxlength="10" id="houseNumber" name="houseNumber" value="<?php echo $this->fieldValue($shipmentValues, 'houseNumber')?>" />
+        </div>
+        <div class="row">
+            <label for="apartmentNumber">Numer lokalu</label><input type="text" maxlength="10" id="apartmentNumber" name="apartmentNumber" value="<?php echo $this->fieldValue($shipmentValues, 'apartmentNumber')?>" />
+        </div>
+        <div class="row">
+            <label for="personName">Osoba kontaktowa</label><input type="text" maxlength="60" id="personName" name="personName" value="<?php echo $this->fieldValue($shipmentValues, 'personName')?>" />
+        </div>
+        <div class="row">
+            <label for="phoneNumber">Tel kontaktowy</label><input type="text" maxlength="20" id="phoneNumber" name="phoneNumber" value="<?php echo $this->fieldValue($shipmentValues, 'phoneNumber')?>" />
+        </div>
+        <div class="row">
+            <label for="emailAddress">Email kontaktowy</label><input type="text" maxlength="60" id="emailAddress" name="emailAddress" value="<?php echo $this->fieldValue($shipmentValues, 'emailAddress')?>" />
+        </div>
+        <div class="row">
+            <label for="sap">Numer klienta</label><input type="text" id="sap" name="sap" value="<?php echo $this->fieldValue($shipmentValues, 'sap')?>" />
+        </div>
+    </div>
+
+    <div class="subcontent">
+        <div class="row ">
+            <label class="" for="rec_name">Nazwa</label><input type="text" maxlength="60" id="rec_name" name="rec_name" value="<?php echo $this->fieldValue($shipmentValues, 'rec_name') ?>" />
+        </div>
+        <div class="row ">
+            <label class="" for="rec_postcode">Kod pocztowy</label><input type="text" maxlength="60" id="rec_postcode" name="rec_postcode" value="<?php echo $this->fieldValue($shipmentValues, 'rec_postcode') ?>" />
+        </div>
+        <div class="row">
+            <label class="" for="rec_city">Miejscowość</label><input type="text" maxlength="60" id="rec_city" name="rec_city" value="<?php echo $this->fieldValue($shipmentValues, 'rec_city')?>" />
+        </div>
+        <div class="row">
+            <label class="" for="rec_street">Ulica</label><input type="text" maxlength="60" id="rec_street" name="rec_street" value="<?php echo $this->fieldValue($shipmentValues, 'rec_street')?>" />
+        </div>
+        <div class="row">
+            <label class="" for="rec_houseNumber">Numer domu</label><input type="text" maxlength="10" id="rec_houseNumber" name="rec_houseNumber" value="<?php echo $this->fieldValue($shipmentValues, 'rec_houseNumber')?>" />
+        </div>
+        <div class="row">
+            <label for="rec_apartmentNumber">Numer lokalu</label><input type="text" maxlength="10" id="rec_apartmentNumber" name="rec_apartmentNumber" value="<?php echo $this->fieldValue($shipmentValues, 'rec_apartmentNumber') ?>" />
+        </div>
+        <div class="row">
+            <label for="rec_personName">Osoba kontaktowa</label><input type="text" maxlength="60" id="rec_personName" name="rec_personName" value="<?php echo $this->fieldValue($shipmentValues, 'rec_personName') ?>" />
+        </div>
+        <div class="row">
+            <label for="rec_phoneNumber">Tel kontaktowy</label><input type="text" maxlength="20" id="rec_phoneNumber" name="rec_phoneNumber" value="<?php echo $this->fieldValue($shipmentValues, 'rec_phoneNumber') ?>" />
+        </div>
+        <div class="row">
+            <label for="rec_emailAddress">Email kontaktowy</label><input type="text" maxlength="60" id="rec_emailAddress" name="rec_emailAddress" value="<?php echo $this->fieldValue($shipmentValues, 'rec_emailAddress') ?>" />
+        </div>
+        <div class="row">
+            <label for="rec_sap">Numer klienta</label><input type="text" id="rec_sap" name="rec_sap" value="<?php echo $this->fieldValue($shipmentValues, 'rec_sap') ?>" />
+        </div>
+    </div>
+</div>
+
+<div class="clear"></div>
+<div class="form_content">
+    <table id="tabelaPaczek" class="lista-table">
+        <tbody id="tabelaPaczekBody"><tr>
+            <th style="width: 23%;" id="first">Rodzaj przesyłki</th>
+            <th style="width: 12%;">Waga</th>
+            <th style="width: 35%;">Wymiary( dł / sz / wys )</th>
+            <th style="width: 10%;">Ilość</th>
+            <th style="width: 12%;"><span style="display: inline-block; height: 15px;">Niestandard</span> <span class="hint_img" id="hint_niestandardowe_img">&nbsp;</span></th>
+            <th style="width: 8%;" id="last">&nbsp;</th>
+        </tr>
+        <?php if (is_array($shipmentValues['Package']) && count($shipmentValues['Package']) > 0): ?>
+            <?php $packageId = 0; ?>
+            <?php foreach ($shipmentValues['Package'] as $package): ?>
+                <?php $packageId++; ?>
+            <tr class="wiersz_paczki" id="wiersz_<?php echo $packageId; ?>">
+                <td>
+                    <select name="Package[<?php echo $packageId; ?>][packageType]" id="packageType_<?php echo $packageId; ?>" class="text packageType">
+                        <option value="ENVELOPE" <?php if( $package['packageType'] == 'ENVELOPE' ) : ?> selected="selected"<?php endif; ?>>koperta</option>
+                        <option value="PACKAGE" <?php if( $package['packageType'] == 'PACKAGE' ) : ?> selected="selected"<?php endif; ?>>paczka</option>
+                        <option value="PALLET" <?php if( $package['packageType'] == 'PALLET' ) : ?> selected="selected"<?php endif; ?>>paleta</option>
+                    </select>
+                </td>
+                <td class="waga_<?php echo $packageId; ?>">
+                    <?php if( $package['packageType'] == 'ENVELOPE' ) : ?>
+                    Max 1 kg
+                    <?php else : ?>
+                    <input name="Package[<?php echo $packageId; ?>][weight]" id="weight_<?php echo $packageId; ?>" value="<?php echo $package['weight']; ?>" class="text" style="width: 40px;" /> kg
+                    <?php endif; ?>
+                </td>
+                <td class="wymiary_<?php echo $packageId; ?>">
+                    <?php if( $package['packageType'] == 'ENVELOPE' ) : ?>
+                    Nie dotyczy
+                    <?php else : ?>
+                    <input name="Package[<?php echo $packageId; ?>][width]" id="width_<?php echo $packageId; ?>" value="<?php echo $package['width']; ?>" class="text" style="width: 40px;" /> x
+                    <input name="Package[<?php echo $packageId; ?>][height]" id="height_<?php echo $packageId; ?>" value="<?php echo $package['height']; ?>" class="text" style="width: 40px;" /> x
+                    <input name="Package[<?php echo $packageId; ?>][length]" id="length_<?php echo $packageId; ?>" value="<?php echo $package['length']; ?>" class="text" style="width: 40px;" /> cm
+                    <?php endif; ?>
+                </td>
+                <td>
+                    <input name="Package[<?php echo $packageId; ?>][quantity]" id="quantity_<?php echo $packageId; ?>" value="<?php echo $package['quantity']; ?>" class="text ilosc" style="width: 40px;" />
+                </td>
+                <td class="niestandardowa_<?php echo $packageId; ?>">
+                    <?php if( $package['packageType'] != 'ENVELOPE' ) : ?>
+                    <input type="checkbox" name="Package[<?php echo $packageId; ?>][nonStandard]" id="nonStandard_<?php echo $packageId; ?>" value="1" style="width: 30px;" <?php if( $this->fieldValue($package, 'nonStandard') ) : ?>checked="checked"<?php endif; ?>/>
+                    <?php endif; ?>
+                </td>
+                <td><?php if( $packageId != 1 ) : ?><a href="javascript:;" class="remove">Usuń</a><?php endif; ?></td>
+            </tr>
+                <?php endforeach; ?>
+            <?php else: ?>
+        <tr class="wiersz_paczki" id="wiersz_1">
+            <td>
+                <select name="Package[1][packageType]" id="packageType_1" class="text">
+                    <option value="ENVELOPE">koperta</option>
+                    <option value="PACKAGE" selected="selected">paczka</option>
+                    <option value="PALLET" >paleta</option>
+                </select>
+
+            </td>
+            <td class="waga_1">
+                <input type="text" name="Package[1][weight]" id="weight_1" class="text" style="width: 40px;" /> kg
+            </td>
+            <td class="wymiary_1">
+                <input name="Package[1][width]" id="width_1" class="text" style="width: 40px;" /> x
+                <input name="Package[1][height]" id="height_1" class="text" style="width: 40px;" /> x
+                <input name="Package[1][length]" id="length_1" class="text" style="width: 40px;" /> cm
+            </td>
+            <td>
+                <input name="Package[1][quantity]" id="quantity_1" class="text ilosc" style="width: 40px;" value="1" />
+            </td>
+            <td class="niestandardowa_1">
+                <input type="checkbox" name="Package[1][nonStandard]" id="nonStandard_1" value="1" style="width: 30px; "/>
+            </td>
+            <td>&nbsp;</td>
+        </tr>
+            <?php endif;?>
+        </tbody>
+    </table>
+    <a href="javascript:;" id="przycisk-dodawania-paczki">Dodaj paczkę +</a>
+</div>
+<div class="clear"></div>
+<div class="form_content">
+    <div class="subcontent">
+        <div class="row">
+            <label for="emailAddress">Zawartość</label>
+            <input type="text" maxlength="60" id="content" name="content" value="<?php echo $this->fieldValue($shipmentValues, 'content') ?>" />
+        </div>
+    </div>
+</div>
+
+<div class="clear"></div>
+<div class="form_header">
+            <span>
+                <div>Rodzaj usługi przewozowej</div>
+                <div class="odb">Dostępne usługi dodatkowe</div>
+            </span>
+</div>
+<div class="form_content">
+<div class="subcontent" >
+    <table class="productsTable">
+        <tbody>
+        <tr>
+            <td style="width: 3%; vertical-align: top; text-align: center;"><input type="radio" class="product" value="AH" <?php echo ($this->fieldValue($shipmentValues, 'product') == 'AH') ? 'checked': ''; ?>  name="product" id="productAH" style="margin-top: 0px;"></td>
+            <td style="width: 77%;"><label style="text-align: left; width: auto; margin: 0; padding: 0;" for="productAH">DHL PARCEL POLSKA</label></td>
+
+        </tr>
+        <tr>
+            <td style="width: 3%; vertical-align: top; text-align: center;"><input type="radio" class="product" value="09" <?php echo ($this->fieldValue($shipmentValues, 'product') == '09') ? 'checked': ''; ?>  name="product" id="productDHL09" style="margin-top: 0px;"></td>
+            <td style="width: 77%;"><label style="text-align: left; width: auto; margin: 0; padding: 0;" for="productDHL09">DHL PARCEL 9</label></td>
+        </tr>
+        <tr>
+            <td style="width: 3%; vertical-align: top; text-align: center;"><input type="radio" class="product" value="12" <?php echo ($this->fieldValue($shipmentValues, 'product') == '12') ? 'checked': ''; ?> name="product" id="productDHL12" style="margin-top: 0px;"></td>
+            <td style="width: 77%;"><label style="text-align: left; width: auto; margin: 0; padding: 0;" for="productDHL12">DHL PARCEL 12</label> </td>
+        </tr>
+        <?php if($isEk):?>
+        <tr>
+            <td style="width: 3%; vertical-align: top; text-align: center;"><input type="radio" class="product" value="EK" <?php echo ($this->fieldValue($shipmentValues, 'product') == 'EK') ? 'checked': ''; ?>  name="product" id="productEK" style="margin-top: 0px;"></td>
+            <td style="width: 77%;"><label style="text-align: left; width: auto; margin: 0; padding: 0;" for="productEK">PRZESYŁKA 2EUROPE</label> </td>
+        </tr>
+            <?php endif; ?>
+        </tbody>
+    </table>
+    <?php if($isEk):?>
+    <div id="productEkDiv" class="subcontent row" style="width: 100%; margin-top: 5px">
+        <div class="row">
+            <label class="" for="ek_country">Kraj</label>
+            <select name="ek_country" id="ek_country">
+                <?php foreach($countries as $key=> $value):?>
+                <option <?php echo ($this->fieldValue($shipmentValues, 'ek_country') == $key ? 'selected="selected"': '')?> value="<?php echo $key; ?>"><?php echo $value; ?></option>
+                <?php endforeach;?>
+
+
+            </select>
+        </div>
+        <div id="ex_all_block">
+            <div id="div_ek_packstation">
+                <div class="row">
+                    <label id="label_ek_packstation" for="ek_packstation">Packstation</label><input type="text" maxlength="60" id="ek_packstation" name="ek_packstation" value="<?php echo $this->fieldValue($shipmentValues, 'ek_packstation') ?>" />
+                </div>
+            </div>
+            <div class="row">
+                <label id="label_ek_postfiliale" for="ek_postfiliale">Postfiliale</label><input type="text" maxlength="60" id="ek_postfiliale" name="ek_postfiliale" value="<?php echo $this->fieldValue($shipmentValues, 'ek_postfiliale') ?>" />
+            </div>
+            <div id="div_ek_postnummer">
+                <div class="row">
+                    <label for="ek_postnummer">Postnummer</label><input type="text" maxlength="60" id="ek_postnummer" name="ek_postnummer" value="<?php echo $this->fieldValue($shipmentValues, 'ek_postnummer') ?>" />
+                </div>
+            </div>
+            <a style="margin-left: 234px;" class="dhllink" href="javascript:;" id="search_link_paczkomat" >Wyszukaj paczkomat</a>
+            <a style="margin-left: 234px;" class="dhllink" href="javascript:;" id="search_link_parcelshop" >Wyszukaj parcelshop</a>
+            <input type="hidden" id="mapType" value="<?php echo $this->fieldValue($shipmentValues, 'ek_country') ?>" />
+        </div>
+    </div>
+
+
+    <?php endif; ?>
+    <div class="clear"></div>
+    <div class="form_header" style="width: 100%;">
+                    <span>
+                        <div>Nadanie</div>
+                    </span>
+    </div>
+    <div class="subcontent" style="width:100%">
+        <div class="row">
+            <label for="shipmentDate">Data nadania</label>
+            <select name="shipmentDate" id="shipmentDate" >
+                <?php foreach($days as $key=> $value):?>
+                <option value="<?php echo $value; ?>" <?php echo ($value == $this->fieldValue($shipmentValues, 'shipmentDate')) ? 'selected="selected"' : ''; ?> ><?php echo $value; ?></option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+        <div id="courierHours" class="row" <?php echo ($canCourier)? '' : 'style="display:none"' ?>>
+            <label style="padding-top: 5px;" for="costsCenter">Godzina przyjazdu kuriera od - do</label>
+            <input style="width: 40px" type="text" id="shipmentEndHour" name="shipmentEndHour" value="<?php echo $this->fieldValue($shipmentValues, 'shipmentEndHour')  ?>" />
+            <input style="width: 40px" type="text" id="shipmentStartHour" name="shipmentStartHour" value="<?php echo $this->fieldValue($shipmentValues, 'shipmentStartHour')  ?>" />
+        </div>
+
+    </div>
+    <div id="courierInfo" class="" <?php echo ($canCourier)? '' : 'style="display:none"' ?>>
+        <div class="row">
+            <a style="margin-left: 0px;" class="dhllink" id="hoursLink" href="javascript:;">Sprawdź dostępne godziny</a>
+        </div>
+        <div class="row">
+            <span id="hoursInfo"></span>
+        </div>
+
+
+    </div>
+</div>
+<div class="subcontent" >
+    <input type="hidden" id="isPrice" value="<?php echo $this->fieldValue($shipmentValues, 'isPrice')?>" />
+    <table class="servicesTable">
+        <tbody>
+        <tr>
+            <td style="width: 3%;">
+                <input <?php if( $this->fieldValue($shipmentValues, 'insurance') ) : ?>checked="checked"<?php endif; ?> type="checkbox" value="1" id="insurance"  name="insurance"  />
+            </td>
+            <td style="width: 77%;">
+                <label style="width: auto; margin: 0; padding: 0;" for="insurance">Ubezpieczenie przesyłki</label>
+            </td>
+        </tr>
+        <tr id="insuranceValueDiv">
+            <td colspan="2">
+                <span style="width: 160px; display: inline-block; text-align: left;">Kwota ubezpieczenia:</span>
+                <input type="text" class="text" id="insuranceValue" value="<?php echo $this->fieldValue($shipmentValues, 'insuranceValue') ?>" name="insuranceValue"> PLN
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 3%;">
+                <input <?php if( $this->fieldValue($shipmentValues, 'collectOnDelivery') ) : ?>checked="checked"<?php endif; ?> type="checkbox" value="1" id="collectOnDelivery"  name="collectOnDelivery" />
+            </td>
+            <td style="width: 77%;">
+                <label style="width: auto; margin: 0; padding: 0;" for="insurance">Zwrot pobrania (COD)</label>
+            </td>
+        </tr>
+        <tr id="collectOnDeliveryValueDiv">
+            <td colspan="2">
+                <span style="width: 160px; display: inline-block; text-align: left;">Kwota pobrania:</span>
+                <input type="text" class="text" id="collectOnDeliveryValue" value="<?php echo $this->fieldValue($shipmentValues, 'collectOnDeliveryValue')?>" name="collectOnDeliveryValue" />
+                <?php if ($this->fieldValue($shipmentValues, 'product') == 'EK'): ?>
+                <span id="currencyCurrency">EUR</span>
+                <?php else: ?>
+                <span id="currencyCurrency">PLN</span>
+                <?php endif; ?>
+
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 3%;">
+                <input <?php if( $this->fieldValue($shipmentValues, 'predeliveryInformation') ) : ?>checked="checked"<?php endif; ?> type="checkbox" value="1" id="predeliveryInformation" name="predeliveryInformation">
+            </td>
+            <td style="width: 77%;"><label style="width: auto; margin: 0; padding: 0;" for="predeliveryInformation">Informacje przed doręczeniem (PDI)</label></td>
+        </tr>
+        <tr>
+            <td style="width: 3%;">
+                <input <?php if( $this->fieldValue($shipmentValues, 'returnOnDelivery') ) : ?>checked="checked"<?php endif; ?> type="checkbox" value="1" id="returnOnDelivery" name="returnOnDelivery"></td>
+            <td style="width: 77%;">
+                <label style="width: auto; margin: 0; padding: 0;" for="returnOnDelivery">Zwrot potwierdzonych dokumentów (ROD)</label>
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 3%;">
+                <input <?php if( $this->fieldValue($shipmentValues, 'proofOfDelivery') ) : ?>checked="checked"<?php endif; ?> type="checkbox" value="1" id="proofOfDelivery"  name="proofOfDelivery">
+            </td>
+            <td style="width: 77%;">
+                <label style="width: auto; margin: 0; padding: 0;" for="proofOfDelivery">Potwierdzenie doręczenia (POD)</label>
+            </td>
+        </tr>
+        <?php if($isSas):?>
+        <tr>
+            <td style="width: 3%;">
+                <input <?php if( $this->fieldValue($shipmentValues, 'deliveryToNeighbour') ) : ?>checked="checked"<?php endif; ?> type="checkbox" value="1" id="deliveryToNeighbour"  name="deliveryToNeighbour" />
+            </td>
+            <td style="width: 77%;">
+                <label style="width: auto; margin: 0; padding: 0;" for="deliveryToNeighbour">Doręczenie do sąsiada</label>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <div id="deliveryToNeighbourDiv" class="subcontent" style="width:100%">
+                    <div class="row ">
+                        <label class="" for="neighbour_name">Nazwa</label><input type="text" maxlength="60" id="neighbour_name" name="neighbour_name" value="<?php echo $this->fieldValue($shipmentValues, 'neighbour_name')?>" />
+                    </div>
+                    <div class="row ">
+                        <label class="" for="neighbour_postcode">Kod pocztowy</label><input type="text" maxlength="60" id="neighbour_postcode" name="neighbour_postcode" value="<?php echo $this->fieldValue($shipmentValues, 'neighbour_postcode') ?>" />
+                    </div>
+                    <div class="row">
+                        <label class="" for="rec_city">Miejscowość</label><input type="text" maxlength="60" id="neighbour_city" name="neighbour_city" value="<?php echo $this->fieldValue($shipmentValues, 'neighbour_city')?>" />
+                    </div>
+                    <div class="row">
+                        <label class="" for="rec_street">Ulica</label><input type="text" maxlength="60" id="neighbour_street" name="neighbour_street" value="<?php echo $this->fieldValue($shipmentValues, 'neighbour_street') ?>" />
+                    </div>
+                    <div class="row">
+                        <label class="" for="rec_houseNumber">Numer domu</label><input type="text" maxlength="10" id="neighbour_houseNumber" name="neighbour_houseNumber" value="<?php echo $this->fieldValue($shipmentValues, 'neighbour_houseNumber')?>" />
+                    </div>
+                    <div class="row">
+                        <label for="rec_apartmentNumber">Numer lokalu</label><input type="text" maxlength="10" id="neighbour_apartmentNumber" name="neighbour_apartmentNumber" value="<?php echo $this->fieldValue($shipmentValues, 'neighbour_apartmentNumber') ?>" />
+                    </div>
+                    <div class="row">
+                        <label for="rec_phoneNumber">Tel kontaktowy</label><input type="text" maxlength="20" id="neighbour_phoneNumber" name="neighbour_phoneNumber" value="<?php echo $this->fieldValue($shipmentValues, 'neighbour_phoneNumber') ?>" />
+                    </div>
+                    <div class="row">
+                        <label for="rec_emailAddress">Email kontaktowy</label><input type="text" maxlength="60" id="neighbour_emailAddress" name="neighbour_emailAddress" value="<?php echo $this->fieldValue($shipmentValues, 'neighbour_emailAddress') ?>" />
+                    </div>
+                </div>
+            </td>
+        </tr>
+            <?php endif; ?>
+        <?php if ($isLm): ?>
+        <tr>
+            <td style="width: 3%;">
+                <input <?php if( $this->fieldValue($shipmentValues, 'deliveryToLM') ) : ?>checked="checked"<?php endif; ?> type="checkbox" value="1" id="deliveryToLM"  name="deliveryToLM" />
+            </td>
+            <td style="width: 77%;">
+                <label style="width: auto; margin: 0; padding: 0;" for="deliveryToLM">Doręczenie do Parcelshop</label>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <div id="deliveryToLMDiv" class="subcontent" style="width: 100%">
+                    <div class="row">
+                        <label class="" for="lm_sap">Nr SAP</label><input type="text" maxlength="60" id="lm_sap" name="lm_sap" value="<?php echo $this->fieldValue($shipmentValues, 'lm_sap') ?>" />
+                    </div>
+                    <a style="margin-left: 227px;" class="dhllink" href="javascript:;" id="lmMapId">Wyszukaj Parcelshop</a>
+                </div>
+
+            </td>
+        </tr>
+            <?php endif; ?>
+        <tr>
+            <td style="width: 3%;">
+                <input <?php if( $this->fieldValue($shipmentValues, 'deliveryEvening') ) : ?>checked="checked"<?php endif; ?> type="checkbox" value="1" id="deliveryEvening"  name="deliveryEvening">
+            </td>
+            <td style="width: 77%;">
+                <label style="width: auto; margin: 0; padding: 0;" for="deliveryEvening">Doręczenie w godzinach 18-22</label>
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 3%;">
+                <input <?php if( $this->fieldValue($shipmentValues, 'deliveryOnSaturday')) : ?>checked="checked"<?php endif; ?> type="checkbox" value="1" id="deliveryOnSaturday"  name="deliveryOnSaturday">
+            </td>
+            <td style="width: 77%;">
+                <label style="width: auto; margin: 0; padding: 0;" for="deliveryOnSaturday">Doręczenie w sobotę</label>
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 3%;">
+                <input <?php if( $this->fieldValue($shipmentValues, 'pickupOnSaturday') ) : ?>checked="checked"<?php endif; ?> type="checkbox" value="1" id="pickupOnSaturday"  name="pickupOnSaturday">
+            </td>
+            <td style="width: 77%;">
+                <label style="width: auto; margin: 0; padding: 0;" for="pickupOnSaturday">Nadanie w sobotę</label>
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 3%;">
+                <input <?php if( $this->fieldValue($shipmentValues, 'selfCollect') ) : ?>checked="checked"<?php endif; ?> type="checkbox" value="1" id="selfCollect"  name="selfCollect">
+            </td>
+            <td style="width: 77%;">
+                <label style="width: auto; margin: 0; padding: 0;" for="selfCollect">Odbiór własny</label>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="row">
+        <label for="costsCenter">MPK</label>
+        <input type="text" maxlength="60" id="costsCenter" name="costsCenter" value="<?php echo $this->fieldValue($shipmentValues, 'costsCenter') ?>" />
+    </div>
+    <div class="row">
+        <label for="reference">Referencja</label>
+        <input type="text" maxlength="60" id="reference" name="reference" value="<?php echo $this->fieldValue($shipmentValues, 'reference') ?>" />
+    </div>
+    <div class="row" style="padding-right: 20px;">
+        <label for="comment">Uwagi</label>
+        <textarea id="comment" name="comment" style="width: 100%; height: 80px;"><?php echo $this->fieldValue($shipmentValues, 'comment') ?></textarea>
+    </div>
+</div>
+</div>
+<div class="clear"></div>
+<div class="form_content">
+    <a class="button" href="<?php echo $this->getUrl('sales/order/index') ?>">
+        <span class="left">&nbsp;</span>
+                <span class="cn">
+                    <span class="txt">Powrót do zamówień</span>
+                    <span class=""></span>
+
+                </span>
+        <span class="right">&nbsp;</span>
+    </a>
+    <a class="button" style="float: right;" id="saveButton" href="javascript:;">
+        <span class="left">&nbsp;</span>
+                <span class="cn">
+                    <span class="txt">Utwórz</span>
+                    <span class="saveIco"></span>
+
+                </span>
+        <span class="right">&nbsp;</span>
+    </a>
+</div>
+<div class="clear"></div>
+</form>
+</div>
+
+
+
+
+<script type="text/javascript">
+
+
+</script>

@@ -1,0 +1,227 @@
+.dhl-shipment-lmmap, .dhl-shipment-europemap {
+    min-width: 100%;
+}
+
+.dhl24 .form_header {
+    background: url("dhl24pl/hd-left-round.png") no-repeat scroll left center #ffcb00;
+
+    height: 32px;
+    margin-top: 10px;
+    width: 50%;
+}
+.dhl24 .form_header span {
+    background: url("dhl24pl/hd-right-round.png") no-repeat scroll right center rgba(0, 0, 0, 0);
+    display: block;
+    height: 100%;
+    width: 100%;
+}
+
+.dhl24 .form_header span div {
+    color: #1c1c1c;
+    float: left;
+    font-size: 13px;
+    font-weight: bold;
+    height: 100%;
+    margin-left: 30px;
+    padding-top: 8px;
+    width: 50%;
+}
+.dhl24 .form_header span div.odb {
+    margin-left: 0px;
+    width: 30%;
+}
+
+.dhl24 .form_content {
+    width: 50%;
+}
+.dhl24 .form_content div.subcontent {
+    float: left;
+    height: 100%;
+    padding-top: 10px;
+    width: 50%;
+}
+
+.dhl24 .form_content div.subcontent div.row {
+    margin: 0 0 10px;
+    min-height: 20px;
+    padding: 0 0 0 30px;
+}
+
+.dhl24 .form_content div.subcontent .row label {
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+}
+.dhl24 input, .dhl24 select {
+    border: 1px solid #d2d2d2;
+}
+.dhl24 input {
+    padding-left: 3px;
+}
+.dhl24 .form_content div.subcontent div.row input, .dhl24 .form_content div.subcontent div.row select {
+    float: right;
+    margin-right: 20px;
+    width: 200px;
+}
+.dhl24 .form_content div.subcontent div.row .platnik-strona-radio input {
+    float: none;
+    width: 10px;
+    margin-right: 5px;
+}
+.dhl24 input.disabled {
+    border: 1px solid #bab8b8;
+    color: #000000;
+    opacity: 0.3;
+}
+.dhl24 .zleceniodawca-strona, .dhl24 .platnik-strona {
+    display: inline-block;
+    margin-top: 4px;
+    vertical-align: top;
+    width: 145px;
+    text-align: right;
+}
+.dhl24 .platnik-strona-radio {
+    float: right;
+    width: 220px;
+}
+.dhl24 .zleceniodawca-platnik {
+    width: 100%;
+}
+.dhl24 .platnik-strona label {
+    display: inline-block;
+    text-align: left;
+    width: 115px;
+}
+.dhl24 .clear {
+    clear:both;
+    width:100%;
+}
+.dhl24 .lista-table {
+    border: 1px solid #fff;
+    border-collapse: collapse;
+    text-align: center;
+    width: 100%;
+}
+.dhl24 .lista-table th {
+    background-color: #fc0;
+    color: #494536;
+    height: 30px;
+    text-align: center;
+    vertical-align: middle;
+}
+.dhl24 .lista-table th#first {
+    background: url("dhl24pl/hd-left-round.png") no-repeat scroll left center #fc0 !important;
+}
+.dhl24 .lista-table th#last {
+    background: url("dhl24pl/hd-right-round.png") no-repeat scroll right center #fc0 !important;
+}
+.dhl24 .lista-table td {
+    border: 1px solid #fff;
+}
+
+.dhl24 .lista-table td input.text, .dhl24 .lista-table td select.text {
+    width: 140px;
+}
+.dhl24 .lista-table td input {
+
+}
+.dhl24 #przycisk-dodawania-paczki{
+    color: #c00;
+    margin-left: 30px;
+    margin-top: 5px;
+    text-decoration: none;
+    display: block;
+}
+.dhl24 .remove{
+    color: #c00;
+    margin-left: 3px;
+    margin-top: 5px;
+    text-decoration: none;;
+}
+.dhl24 h2 {
+    clear: both;
+    padding-left: 20px;
+}
+.dhl24 h2 span {
+    background-color: #ffcb00;
+    color: #494536;
+    display: block;
+    font-size: 12px;
+    font-weight: bold;
+    height: 12px;
+    padding-bottom: 11px;
+    padding-top: 9px;
+    width: 100%;
+}
+.dhl24 .productsTable {
+    margin-left: 30px;
+}
+
+.dhl24 .dhllink {
+    color: #c00;
+    margin-left: 30px;
+    margin-top: 5px;
+    text-decoration: none;
+}
+.dhl24 .servicesTable {
+    margin-left: 30px;
+}
+.dhl24 .errorSummary {
+    background: none repeat scroll 0 0 #fee;
+    border: 1px solid #c00;
+    margin: 12px 0;
+    padding: 7px;
+    width: 723px;
+}
+
+/* buttons*/
+.dhl24 a.button span {
+    display: block;
+    float: left;
+    height: 32px;
+}
+.dhl24 a.button span.left {
+    background: url("dhl24pl/btn_left.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
+    padding: 0;
+    width: 13px;
+}
+
+.dhl24 a.button span.cn {
+    background: url("dhl24pl/btn_cn.png") repeat-x scroll 0 0 rgba(0, 0, 0, 0);
+    color: #fff;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 0;
+    vertical-align: middle;
+}
+
+.dhl24 a.button span.right {
+    background: url("dhl24pl/btn_right.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
+    padding: 0;
+    width: 13px;
+}
+
+.dhl24 a.button span.cn span.txt {
+    cursor: pointer;
+    margin-left: 5px;
+    margin-top: 7px;
+    width: auto !important;
+}
+.dhl24 span.saveIco {
+    background: url("dhl24pl/zapisz_ico.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
+    width: 16px;
+    height: 15px;
+    border: 0 none;
+    margin-left: 4px;
+    margin-top: 9px;
+    vertical-align: middle;
+}
+
+.dhl24 .back {
+    color: #c00;
+    display: inline-block;
+    float: left;
+    position: relative;
+    top: 7px;
+    text-decoration: none;
+}

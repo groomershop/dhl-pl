@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd" layout="1column">
+    <head>
+
+    </head>
+    <body>
+        <referenceContainer name="page.wrapper" remove="true"/>
+        <referenceBlock name="requirejs-config" remove="true"/>
+        <referenceContainer name="root">
+            <block class="DHL\Dhl24pl\Block\Frontend\Shipment\Lmmap" name="shipment_lmmap" template="DHL_Dhl24pl::lmmap.phtml" />
+        </referenceContainer>
+    </body>
+</page>

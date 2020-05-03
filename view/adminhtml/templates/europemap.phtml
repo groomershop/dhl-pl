@@ -1,0 +1,31 @@
+<?php
+$country = $block->getCountryEk();
+$type = $block->getTypeEk();
+?>
+
+<iframe src="<?php echo $block->getEuropemapUrl(); ?>?country=<?php echo $country; ?>&ptype=<?php echo $type; ?>&city=&postCode=" style="position: absolute;top: 0;bottom: 0;left: 0;right: 0;height: 100%;width: 100%;border: 0;"></iframe>
+<script type="text/javascript">
+    /*<![CDATA[*/
+    function listenMessage(msg) {
+        var point = JSON.parse(msg.data);
+        if (window.opener.document.getElementById('mapType').value == 'packStation') {
+            window.opener.document.getElementById('ek_packstation').value=point.sap;
+            window.opener.document.getElementById('ek_postfiliale').value='';
+        } else if(window.opener.document.getElementById('mapType').value == 'parcelShop') {
+            window.opener.document.getElementById('ek_postfiliale').value=point.sap;
+            window.opener.document.getElementById('ek_packstation').value='';
+        }
+
+        window.opener.document.getElementById('rec_city').value=point.city;
+        window.opener.document.getElementById('rec_postcode').value=point.zip;
+        self.close();
+    }
+
+
+    if (window.addEventListener) {
+        window.addEventListener("message", listenMessage, false);
+    } else {
+        window.attachEvent("onmessage", listenMessage);
+    }
+    /*]]>*/
+</script>

@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Api/etc/extension_attributes.xsd">
+    <extension_attributes for="Magento\Checkout\Api\Data\ShippingInformationInterface">
+        <attribute code="courier_neighbor_name" type="string"/>
+        <attribute code="courier_neighbor_postcode" type="string"/>
+        <attribute code="courier_neighbor_city" type="string"/>
+        <attribute code="courier_neighbor_street" type="string"/>
+        <attribute code="courier_neighbor_houseNumber" type="string"/>
+        <attribute code="courier_neighbor_apartmentNumber" type="string"/>
+        <attribute code="courier_neighbor_phoneNumber" type="string"/>
+        <attribute code="courier_neighbor_emailAddress" type="string"/>
+        <attribute code="parceslhop_sap" type="string"/>
+    </extension_attributes>
+</config>

@@ -1,0 +1,77 @@
+<?php
+$pnpValue = $block->getPnpValues();
+$type = isset($pnpValue['type']) ? $pnpValue['type'] : '';
+$kind = isset($pnpValue['kind']) ? $pnpValue['kind'] : '';
+$date = isset($pnpValue['date']) ? $pnpValue['date'] : '';
+
+?>
+<div class="dhl24">
+    <form action="<?php echo $block->getSaveUrl() ?>" method="post" id="pnpForm">
+        <?php echo $block->getBlockHtml('formkey')?>
+        <div class="form_header">
+            <span>
+                <div>Generowanie raportu PNP</div>
+            </span>
+        </div>
+        <div class="clear"></div>
+        <div class="form_content">
+            <div class="subcontent">
+                <div class="row">
+                    <label for="kind">Rodzaj raportu</label>
+                    <select name="kind" id="kind">
+                        <option value="WEBAPI" <?php echo ('WEBAPI' == $kind) ? 'selected="selected"' : ''; ?> >Standardowe przesyłki</option>
+                        <option value="SERVICEPOINT" <?php echo ('SERVICEPOINT' == $kind) ? 'selected="selected"' : ''; ?> >Przesyłki ParcelShop</option>
+                    </select>
+                </div>
+                <div class="row">
+                    <label class="" for="date">Data</label><input type="text" maxlength="60" id="date" name="date" value="<?php echo $date ?>" />
+                </div>
+                <div class="row" id="typeRow">
+                    <label for="type">Typ przesyłki</label>
+                    <select name="type" id="type" >
+                        <option value="" <?php  (empty($type)) ? 'selected="selected"' : ''; ?> >-- wybierz --</option>
+                        <option value="EX" <?php echo ('EX' == $type) ? 'selected="selected"' : ''; ?> >Krajowe ekspresowe do 31,5kg</option>
+                        <option value="DR" <?php echo ('DR' == $type) ? 'selected="selected"' : ''; ?> >Krajowe drobnicowe</option>
+                        <option value="ALL" <?php echo ('ALL' == $type) ? 'selected="selected"' : ''; ?> >Wszystkie przesyłki</option>
+                        <option value="2EUROPE" <?php echo ('2EUROPE' == $type) ? 'selected="selected"' : ''; ?> >Przesyłki eksportowe</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="clear"></div>
+        <div class="form_content">
+            <a class="button" style="float: right;" id="saveButton" href="javascript:;">
+                <span class="left">&nbsp;</span>
+                <span class="cn">
+                    <span class="txt">Drukuj</span>
+                    <span class="saveIco"></span>
+
+                </span>
+                <span class="right">&nbsp;</span>
+            </a>
+        </div>
+        <div class="clear"></div>
+    </form>
+
+</div>
+<script type="text/javascript">
+    init();
+    function init(){
+        var form = document.getElementById("pnpForm");
+        document.getElementById("saveButton").addEventListener("click", function () {
+            form.submit();
+        });
+        changeKind();
+    }
+    function changeKind(){
+        var e = document.getElementById("kind");
+        var str = e.options[e.selectedIndex].value;
+        if (str == 'WEBAPI') {
+            document.getElementById('typeRow').style.display='block';
+        } else {
+            document.getElementById('typeRow').style.display='none';
+        }
+    }
+</script>
+
+

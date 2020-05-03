@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="DHL_Dhl24pl::css/dhl24pl.css"/>
+    </head>
+    <body>
+        <referenceContainer name="page.wrapper" remove="true"/>
+        <referenceContainer name="menu.wrapper" remove="true"/>
+        <referenceBlock name="requirejs-config" remove="true"/>
+		<referenceContainer name="root">
+            <block class="DHL\Dhl24pl\Block\Adminhtml\Shipment\Lmmap" name="dhl_dhl24pl_shipment_lmmap" template="DHL_Dhl24pl::lmmap.phtml" />
+        </referenceContainer>
+    </body>
+</page>

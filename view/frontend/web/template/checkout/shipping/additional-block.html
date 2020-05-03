@@ -1,0 +1,92 @@
+<div id="dhl_dhl24pl_courier_block"   data-bind="visible: getVisibleCourier()">
+    <div class="form form-shipping-address">
+        <div class="fieldset address">
+            <label class="label">
+                <span><strong>Adres sąsiada (opcjonalnie)</strong></span>
+            </label>
+            <div class="field" name="shippingAddress.courier_neighbor_name">
+                <label class="label">
+                    <span >Nazwa</span>
+                </label>
+                <div class="control">
+                    <input type="text" value="" class="input-text" name="courier_neighbor_name" placeholder="" maxlength="60">
+                </div>
+            </div>
+            <div class="field" name="shippingAddress.courier_neighbor_postcode">
+                <label class="label">
+                    <span>Kod pocztowy</span>
+                </label>
+                <div class="control">
+                    <input type="text" value="" class="input-text" name="courier_neighbor_postcode" placeholder="" maxlength="60">
+                </div>
+            </div>
+            <div class="field" name="shippingAddress.courier_neighbor_city">
+                <label class="label">
+                    <span>Miejscowość</span>
+                </label>
+                <div class="control">
+                    <input type="text" value="" class="input-text" name="courier_neighbor_city" placeholder="" maxlength="60">
+                </div>
+            </div>
+            <div class="field" name="shippingAddress.courier_neighbor_street">
+                <label class="label">
+                    <span>Ulica</span>
+                </label>
+                <div class="control">
+                    <input type="text" value="" class="input-text" name="courier_neighbor_street" placeholder="" maxlength="60">
+                </div>
+            </div>
+            <div class="field" name="shippingAddress.courier_neighbor_houseNumber">
+                <label class="label">
+                    <span>Numer domu</span>
+                </label>
+                <div class="control">
+                    <input type="text" value="" class="input-text" name="courier_neighbor_houseNumber" placeholder="" maxlength="60">
+                </div>
+            </div>
+            <div class="field" name="shippingAddress.courier_neighbor_apartmentNumber">
+                <label class="label">
+                    <span>Numer mieszkania</span>
+                </label>
+                <div class="control">
+                    <input type="text" value="" class="input-text" name="courier_neighbor_apartmentNumber" placeholder="" maxlength="60">
+                </div>
+            </div>
+            <div class="field" name="shippingAddress.courier_neighbor_phoneNumber">
+                <label class="label">
+                    <span>Tel kontaktowy</span>
+                </label>
+                <div class="control">
+                    <input type="text" value="" class="required-entry input-text" name="courier_neighbor_phoneNumber" placeholder="" maxlength="60">
+                </div>
+            </div>
+            <div class="field" name="shippingAddress.courier_neighbor_emailAddress">
+                <label class="label">
+                    <span>Email kontaktowy</span>
+                </label>
+                <div class="control">
+                    <input type="text" value="" class="input-text validate-email" name="courier_neighbor_emailAddress" placeholder="" maxlength="60">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="dhl_dhl24pl_parcelshop_block"  data-bind="visible: getVisibleParcelshop()">
+    <input type="hidden" id="lmMapUrl" data-bind="value: getLmmapUrl()" />
+    <div class="form form-shipping-address">
+        <div class="fieldset address">
+            <label class="label">
+                <span><strong><a style="display: block;margin-bottom: 10px;margin-top: 10px;" id="dhllink" href="javascript:;" >Wyszukaj Parcelshop na mapie</a></strong></span>
+            </label>
+            <div class="field _required" name="shippingAddress.parceslhop_sap">
+                <label class="label">
+                    <span >Wybrany Parcelshop</span>
+                </label>
+                <div class="control">
+                    <span id="parceslhop_desc"></span>
+                    <input data-validate="{required:true}" type='hidden' id="parceslhop_sap" name='parceslhop_sap' class='required-entry input-text' value='' />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

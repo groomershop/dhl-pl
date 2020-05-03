@@ -1,0 +1,41 @@
+<?php
+namespace DHL\Dhl24pl\Controller\Adminhtml\Shipment;
+
+use Magento\Backend\App\Action;
+
+class Hours extends \Magento\Backend\App\Action
+{
+
+    /**
+     * @param Action\Context $context
+     */
+    public function __construct(
+        Action\Context $context
+    ) {
+        parent::__construct($context);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function _isAllowed()
+    {
+        return $this->_authorization->isAllowed('DHL_Dhl24pl::dhlpl');
+    }
+
+    public function execute() {
+        $date = $this->getRequest()->getParam('date');
+        $code = $this->getRequest()->getParam('code');
+        $apiHelper = $this->_objectManager->get('DHL\Dhl24pl\Helper\Api');
+        try {
+            $result = $apiHelper->getPostalCodeServices($date, $code);
+        } catch (\Exception $e) {
+            $result = 'Błąd podczas pobierania dostepnych godzin';
+        }
+
+        $jsonData = json_encode($result);
+        $this->getResponse()->setHeader('Content-type', 'application/json');
+        $this->getResponse()->setBody($jsonData);
+    }
+
+}
