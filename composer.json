@@ -1,0 +1,13 @@
+{
+    "name": "dhl/dhl24pl",
+    "description": "DHL24 PL plugin",
+    "type": "magento2-module",
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Magento\\Checkout\\": ""
+        }
+    }
+}
