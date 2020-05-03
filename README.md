@@ -1,7 +1,7 @@
 # dhl24pl by GroomerShop
 Installation of DHL24 PL plugin by composer:
 
-composer config repositories.dhl-dhl24pl vcs git@github.com:groomershop/dhl24pl.git
+composer config repositories.dhl-pl vcs git@github.com:groomershop/dhl-pl.git
 
 composer require dhl/dhl24pl:dev-master
 
