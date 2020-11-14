@@ -40,7 +40,7 @@ class Carrier extends \Magento\Shipping\Model\Carrier\AbstractCarrier implements
     {
         return array(
             'parcelshop' => 'DHL Parcelshop',
-            'courier' => 'DHL Kurier',
+            // 'courier' => 'DHL Kurier',
         );
     }
 
@@ -57,7 +57,7 @@ class Carrier extends \Magento\Shipping\Model\Carrier\AbstractCarrier implements
         $result = $this->_rateResultFactory->create();
 
         $result->append($this->_getParcelshopShippingMethod());
-        $result->append($this->_getCourierShippingRate());
+        // $result->append($this->_getCourierShippingRate());
 
         return $result;
     }
@@ -68,10 +68,10 @@ class Carrier extends \Magento\Shipping\Model\Carrier\AbstractCarrier implements
 
         $method->setCarrier($this->_code);
 
-        $method->setCarrierTitle('Odbiór w punkcie DHL');
+        $method->setCarrierTitle($this->getConfigData('title'));
 
         $method->setMethod('parcelshop');
-        $method->setMethodTitle('Sklepy Żabka, Inmedia, Kaufland, Shell, DHL Parcelshop');
+        $method->setMethodTitle('Sklepy Żabka, Kaufland, Shell, DHL');
 
         $price = $this->getConfigData('price_parcelshop');
         $method->setPrice($price);
