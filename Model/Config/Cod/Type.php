@@ -13,7 +13,7 @@ class Type implements \Magento\Framework\Option\ArrayInterface
     public function toOptionArray()
     {
         return [
-            ['value' => '', 'label' => __('')],
+            ['value' => '', 'label' => ''],
             ['value' => 'cashondelivery', 'label' => __('COD wbudowane w Magento')],
             ['value' => 'empty', 'label' => __('Brak COD')]
         ];
