@@ -13,7 +13,7 @@ class Variant implements \Magento\Framework\Option\ArrayInterface
     public function toOptionArray()
     {
         return [
-            ['value' => '', 'label' => __('')],
+            ['value' => '', 'label' => ''],
             ['value' => 'all', 'label' => __('Suma za towary z zamówienia i koszt transportu ')],
             ['value' => 'products', 'label' => __('Tylko suma za towary z zamówienia')]
         ];
