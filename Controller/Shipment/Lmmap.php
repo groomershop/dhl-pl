@@ -1,9 +1,16 @@
 <?php
+declare(strict_types=1);
+
 namespace DHL\Dhl24pl\Controller\Shipment;
 
-
 use Magento\Sales\Api\OrderRepositoryInterface;
+use Magento\Framework\App\Action\Context;
+use Magento\Framework\View\Result\PageFactory;
 
+/**
+ * Class Lmmap
+ * @package DHL\Dhl24pl\Controller\Shipment
+ */
 class Lmmap extends \Magento\Framework\App\Action\Action
 {
 
@@ -12,15 +19,14 @@ class Lmmap extends \Magento\Framework\App\Action\Action
      */
     protected $resultPageFactory;
 
-
     /**
-     * @param \Magento\Framework\App\Action\Context $context
-     * @param \Magento\Framework\View\Result\PageFactory $resultPageFactory
-     * @param \Magento\Framework\Registry $registry
+     * Lmmap constructor.
+     * @param Context $context
+     * @param PageFactory $resultPageFactory
      */
     public function __construct(
-        \Magento\Framework\App\Action\Context $context,
-        \Magento\Framework\View\Result\PageFactory $resultPageFactory
+        Context $context,
+        PageFactory $resultPageFactory
     ) {
         $this->resultPageFactory = $resultPageFactory;
         parent::__construct($context);
@@ -37,6 +43,9 @@ class Lmmap extends \Magento\Framework\App\Action\Action
         return $resultPage;
     }
 
+    /**
+     * @return \Magento\Backend\Model\View\Result\Page|\Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\ResultInterface
+     */
     public function execute() {
         $resultPage = $this->_initAction();
         return $resultPage;

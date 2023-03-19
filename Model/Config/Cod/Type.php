@@ -1,19 +1,23 @@
 <?php
-/**
- * Copyright © 2016 Magento. All rights reserved.
- * See COPYING.txt for license details.
- */
+declare(strict_types=1);
+
 namespace DHL\Dhl24pl\Model\Config\Cod;
 
-class Type implements \Magento\Framework\Option\ArrayInterface
+use Magento\Framework\Data\OptionSourceInterface;
+
+/**
+ * Class Type
+ * @package DHL\Dhl24pl\Model\Config\Cod
+ */
+class Type implements OptionSourceInterface
 {
     /**
-     * {@inheritdoc}
+     * @return array|array[]
      */
-    public function toOptionArray()
+    public function toOptionArray(): array
     {
         return [
-            ['value' => '', 'label' => ''],
+            ['value' => '', 'label' => __('')],
             ['value' => 'cashondelivery', 'label' => __('COD wbudowane w Magento')],
             ['value' => 'empty', 'label' => __('Brak COD')]
         ];

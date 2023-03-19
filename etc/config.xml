@@ -6,13 +6,40 @@
                 <active>0</active>
                 <sallowspecific>0</sallowspecific>
                 <model>DHL\Dhl24pl\Model\Carrier\Carrier</model>
-                <name>DHL24</name>
+                <name>DHL</name>
+                <title_courier>DHL Kurier</title_courier>
+                <title_cod>DHL Pobranie</title_cod>
+                <title_parcelshop>DHL Parcelshop</title_parcelshop>
+                <title_parcelshop_cod>DHL Parcelshop Pobranie</title_parcelshop_cod>
+                <title_evening>DHL Wieczór</title_evening>
+                <title_dhl12>DHL 12</title_dhl12>
+                <title_dhl09>DHL 09</title_dhl09>
+                <title_max>DHL PARCEL MAX</title_max>
+                <title_premium>DHL PARCEL PREMIUM</title_premium>
+                <active_cod>0</active_cod>
+                <active_parcelshop>0</active_parcelshop>
+                <active_parcelshop_cod>0</active_parcelshop_cod>
+                <active_evening>0</active_evening>
+                <active_dhl12>0</active_dhl12>
+                <active_dhl09>0</active_dhl09>
+                <active_max>0</active_max>
+                <active_premium>0</active_premium>
                 <price_parcelshop></price_parcelshop>
                 <price_courier></price_courier>
-                <title>DHL24</title>
+                <title>DHL</title>
                 <type>I</type>
                 <specificerrmsg>This shipping method is not available. To use this shipping method, please contact us.</specificerrmsg>
             </dhl_dhl24pl>
         </carriers>
+        <dhl24pl>
+            <api>
+                <api_type>1</api_type>
+            </api>
+        </dhl24pl>
+        <return>
+            <enable>0</enable>
+            <non_standard>0</non_standard>
+            <pallet>0</pallet>
+        </return>
     </default>
 </config>

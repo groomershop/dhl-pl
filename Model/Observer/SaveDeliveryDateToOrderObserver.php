@@ -1,35 +1,45 @@
 <?php
+declare(strict_types=1);
 
 namespace DHL\Dhl24pl\Model\Observer;
 
 use Magento\Framework\Event\Observer as EventObserver;
 use Magento\Framework\Event\ObserverInterface;
+use Magento\Quote\Model\QuoteRepository;
 
+/**
+ * Class SaveDeliveryDateToOrderObserver
+ * @package DHL\Dhl24pl\Model\Observer
+ */
 class SaveDeliveryDateToOrderObserver implements ObserverInterface
 {
     /**
-     * @var \Magento\Framework\ObjectManagerInterface
+     * @var QuoteRepository
      */
-    protected $_objectManager;
+    protected $quoteRepository;
 
     /**
-     * @param \Magento\Framework\ObjectManagerInterface $objectmanager
+     * SaveDeliveryDateToOrderObserver constructor.
+     * @param QuoteRepository $quoteRepository
      */
-    public function __construct(\Magento\Framework\ObjectManagerInterface $objectmanager)
+    public function __construct(QuoteRepository $quoteRepository)
     {
-        $this->_objectManager = $objectmanager;
+        $this->quoteRepository = $quoteRepository;
     }
 
+    /**
+     * @param EventObserver $observer
+     * @return $this|void
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
     public function execute(EventObserver $observer)
     {
         $order = $observer->getOrder();
-        $quoteRepository = $this->_objectManager->create('Magento\Quote\Model\QuoteRepository');
         /** @var \Magento\Quote\Model\Quote $quote */
-        $quote = $quoteRepository->get($order->getQuoteId());
-        $order->setDhlplParcelshop( $quote->getDhlplParcelshop() );
-        $order->setDhlplNeighbor( $quote->getDhlplNeighbor() );
+        $quote = $this->quoteRepository->get($order->getQuoteId());
+        $order->setDhlplParcelshop($quote->getDhlplParcelshop());
+        $order->setDhlplNeighbor($quote->getDhlplNeighbor());
 
         return $this;
     }
-
 }

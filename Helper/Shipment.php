@@ -1,42 +1,63 @@
 <?php namespace DHL\Dhl24pl\Helper;
 
-use Magento\Framework\App\Action\Action;
+use Magento\Framework\App\Helper\AbstractHelper;
+use Magento\Framework\App\Helper\Context;
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Sales\Api\OrderRepositoryInterface;
 
-class Shipment extends \Magento\Framework\App\Helper\AbstractHelper
+class Shipment extends AbstractHelper
 {
-
-    protected $_objectManager;
-
-    protected $_scopeConfig;
-
-    private $error;
+    protected $error;
 
     /**
-     * Constructor
-     *
-     * @param \Magento\Framework\App\Helper\Context $context
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+     * @var ScopeConfigInterface
+     */
+    protected $scopeConfig;
+
+    /**
+     * @var OrderRepositoryInterface
+     */
+    protected $orderRepositoryInterface;
+
+    /**
+     * Shipment constructor.
+     * @param Context $context
+     * @param ScopeConfigInterface $scopeConfig
+     * @param OrderRepositoryInterface $orderRepositoryInterface
      */
     public function __construct(
-        \Magento\Framework\App\Helper\Context $context,
-        \Magento\Framework\ObjectManagerInterface $objectManager,
-        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+        Context $context,
+        ScopeConfigInterface $scopeConfig,
+        OrderRepositoryInterface $orderRepositoryInterface
     )
     {
-        $this->_scopeConfig = $scopeConfig;
-        $this->_objectManager = $objectManager;
+        $this->scopeConfig = $scopeConfig;
+        $this->orderRepositoryInterface = $orderRepositoryInterface;
+
         parent::__construct($context);
     }
 
-    public function setError($error) {
+    /**
+     * @param $error
+     */
+    public function setError($error)
+    {
         $this->error = $error;
     }
 
-    public function getError() {
+    /**
+     * @return mixed
+     */
+    public function getError()
+    {
         return $this->error;
     }
 
-    public function isError() {
+    /**
+     * @return bool
+     */
+    public function isError(): bool
+    {
         if (empty($this->error)) {
             return false;
         } else {
@@ -44,22 +65,22 @@ class Shipment extends \Magento\Framework\App\Helper\AbstractHelper
         }
     }
 
-
-    /** Metoda przetwarza 'surowe' dane z panelu magento w przystepną tablicę
+    /**
      * @param $result
      * @return array
      */
-    public function prepareData($result) {
-        $data = array();
+    public function prepareData($result)
+    {
+        $data = [];
         $data['labelType'] = $result->labelType;
         $data['dropOffType'] = $result->dropOffType;
         $data['sas'] = $result->sas;
         $data['ek'] = $result->ek;
-        $senders = array();
+        $senders = [];
+        $sender = [];
         if (isset($result->senders->item)) {
             if (is_array($result->senders->item)) {
                 foreach ($result->senders->item as $key => $value) {
-                    $sender = array();
                     $sender['name'] = $value->name;
                     $sender['sap'] = $value->sap;
                     $sender['personName'] = $value->personName;
@@ -74,7 +95,6 @@ class Shipment extends \Magento\Framework\App\Helper\AbstractHelper
                 }
             } else if(is_object($result->senders->item)) {
                 $value = $result->senders->item;
-                $sender = array();
                 $sender['name'] = $value->name;
                 $sender['sap'] = $value->sap;
                 $sender['personName'] = $value->personName;
@@ -90,11 +110,11 @@ class Shipment extends \Magento\Framework\App\Helper\AbstractHelper
         }
         $data['senders'] = $senders;
 
-        $shipments = array();
+        $shipments = [];
+        $shipment = [];
         if (isset($result->shipments->item)) {
             if (is_array($result->shipments->item)) {
                 foreach ($result->shipments->item as $key => $value) {
-                    $shipment = array();
                     $shipment['name'] = $value->name;
                     $shipment['senderName'] = $value->senderName;
                     $shipment['default'] = $value->default;
@@ -128,7 +148,6 @@ class Shipment extends \Magento\Framework\App\Helper\AbstractHelper
                 }
             } else if(is_object($result->shipments->item)){
                 $value = $result->shipments->item;
-                $shipment = array();
                 $shipment['name'] = $value->name;
                 $shipment['senderName'] = $value->senderName;
                 $shipment['default'] = $value->default;
@@ -161,29 +180,18 @@ class Shipment extends \Magento\Framework\App\Helper\AbstractHelper
                 $shipments[$value->name] = $shipment;
             }
         }
+
         $data['shipments'] = $shipments;
         return $data;
     }
 
-    /***** METODY POMOCNICZE *****/
-
-    /** Metoda sprawdza czy wybralismy opcje doreczenia do parceslhop, wywolywana jest api servicepoint
-     * @param $allShipment - dane przesylki
+    /**
+     * @param $magentoData
+     * @param $shipment
      * @return bool
      */
-    public function isLmShipment($allShipment) {
-        if (isset($allShipment['deliveryToLM']) && $allShipment['deliveryToLM']) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-    /** Metoda sprawdza czy dla zdefiniowanych danych mozna zamowic kuriera
-     * @param $magentoData - dane z panelu magento z dhl
-     * @param $shipment - nazwa wybranej przesylki, w przesylce jest tez informacja o dostepnosci kuriera
-     * @return bool
-     */
-    public function canCourier($magentoData, $shipment) {
+    public function canCourier($magentoData, $shipment): bool
+    {
         if ((isset($magentoData['dropOffType']) && $magentoData['dropOffType'] == 'REQUEST_COURIER') || (isset($magentoData['shipments'][$shipment]) && isset($magentoData['shipments'][$shipment]['courier']) && $magentoData['shipments'][$shipment]['courier'])) {
             return true;
         } else {
@@ -191,14 +199,13 @@ class Shipment extends \Magento\Framework\App\Helper\AbstractHelper
         }
     }
 
-    /** Metoda pobiera dane odbiorcy z zamowienia
-     * @param $orderId numer zamowienia w magento
+    /**
+     * @param $model
      * @return array
      */
-    public function getFromOrderData($model) {
-        //$model = $this->getOrder($orderId);
-
-        $data = array();
+    public function getFromOrderData($model): array
+    {
+        $data = [];
         $data['rec_name'] = $model->getShippingAddress()->getCompany() . ' ' . $model->getShippingAddress()->getFirstname().' '.$model->getShippingAddress()->getLastname();
         $data['rec_name'] = trim( $data['rec_name'] );
         $data['rec_name'] = substr( $data['rec_name'], 0, 60 );
@@ -251,14 +258,14 @@ class Shipment extends \Magento\Framework\App\Helper\AbstractHelper
             $data['lm_sap'] = $parcelshop->sap;
             $data['deliveryToLM'] = 1;
         }
-        //sprawdzenie czy została wybrana opcja cashondelivery
-        $type = $this->_scopeConfig->getValue('dhl24pl/cod/type', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
-        $variant = $this->_scopeConfig->getValue('dhl24pl/cod/variant', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+
+        $type = $this->scopeConfig->getValue('dhl24pl/cod/type', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        $variant = $this->scopeConfig->getValue('dhl24pl/cod/variant', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
         $payment = $model->getPayment();
         $paymentType = $payment->getMethod();
         $price = false;
-        if ($type == 'cashondelivery') {//jest wlaczona opcja COD
-            if ($type == $paymentType) {//platnosc zgadza sie z typem
+        if ($type == 'cashondelivery') {
+            if ($type == $paymentType) {
                 if ($variant == 'all') {
                     $price = $model->getGrandTotal();
                 } elseif ($variant == 'products') {
@@ -266,7 +273,7 @@ class Shipment extends \Magento\Framework\App\Helper\AbstractHelper
                 }
             }
         }
-        if ($price !== false) {//jest COD
+        if ($price !== false) {
             $data['insurance'] = 1;
             $data['insuranceValue'] = number_format($price, 2, '.', '');
             $data['collectOnDelivery'] = 1;
@@ -279,31 +286,13 @@ class Shipment extends \Magento\Framework\App\Helper\AbstractHelper
         return $data;
     }
 
-    /** Metoda sprawdza czy przesylka juz zostala utworzona dla danego zamowienia
-     * @param $id numer zamowienia z magento
-     * @return bool
+    /**
+     * @param $id
+     * @return bool|\Magento\Sales\Api\Data\OrderInterface
      */
-    public function isAlreadyCreated($order) {
-        if ($order) {
-            $shipment = $order->getDhlplSettings();
-            if (empty($shipment)) {
-                return false;
-            } else {
-                return true;
-            }
-        } else {
-            return false;
-        }
-    }
-
-    /** Metoda pobiera zamowienie z magenyo
-     * @param $oid numer zamowienia z magento
-     * @return bool
-     */
-    public function getOrder($id) {
-        $orderRepository = $this->_objectManager
-            ->get('Magento\Sales\Api\OrderRepositoryInterface');
-        $order = $orderRepository->get($id);
+    public function getOrder($id)
+    {
+        $order = $this->orderRepositoryInterface->get($id);
         if ($order->getId()) {
             return $order;
         } else {
@@ -311,11 +300,12 @@ class Shipment extends \Magento\Framework\App\Helper\AbstractHelper
         }
     }
 
-    /** Metoda sprawdza czy istnieje zamowienie o podanym id
-     * @param $id numer zamowienia
+    /**
+     * @param $order
      * @return bool
      */
-    public function isOrder($order) {
+    public function isOrder($order): bool
+    {
         if ($order) {
             return true;
         } else {
@@ -323,12 +313,13 @@ class Shipment extends \Magento\Framework\App\Helper\AbstractHelper
         }
     }
 
-    /** Metoda na podstawie danych konfiguracyjnych sprawdza czy jest dostep do LM
-     *
+    /**
+     * @return bool
      */
-    public function isLm() {
-        $login = $this->_scopeConfig->getValue('dhl24pl/servicepoint/login', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
-        $pass = $this->_scopeConfig->getValue('dhl24pl/servicepoint/password', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+    public function isLm(): bool
+    {
+        $login = $this->scopeConfig->getValue('dhl24pl/servicepoint/login', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        $pass = $this->scopeConfig->getValue('dhl24pl/servicepoint/password', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
         if (empty($login) || empty($pass)) {
             return false;
         } else {
@@ -336,18 +327,22 @@ class Shipment extends \Magento\Framework\App\Helper\AbstractHelper
         }
     }
 
-    public function cleanPostalCode($code) {
+    /**
+     * @param $code
+     * @return string|string[]
+     */
+    public function cleanPostalCode($code): string
+    {
         return str_replace('-', '', $code);
     }
 
-    /** Metoda do rozbijania frazu z ulicą, nr domu i nr lokalu na ulicę nr domu i nr loklau jako tablice elemtnow
+    /**
      * @param $streetFull
-     * @return array|bool
+     * @return string|array
      */
-    public function preg($streetFull) {
-
-
-        $data = array('street' => '', 'houseNumber' => '', 'apartmentNumber' => '');
+    public function preg($streetFull)
+    {
+        $data = ['street' => '', 'houseNumber' => '', 'apartmentNumber' => ''];
         $streetFull = trim($streetFull);
 
         $pregLokal = 'l[\.]?|lo[\.]?|lok[\.]?|loka[\.]?|lokal[\.]?';
@@ -391,85 +386,27 @@ class Shipment extends \Magento\Framework\App\Helper\AbstractHelper
                 $data['houseNumber'] = $wynik[2];
             }
         } else {
-            $data = false;
+            $data = '';
         }
+
         return $data;
     }
 
-    public function prepareAllShipment(& $magentoData, $order) {
-//        //ustawiamy informacje czy dostepne LM
-        $magentoData['lm'] = $this->isLm();
-
-        //pobieramy domyslna przesylke
-        $shipment = array();
-        if (isset($magentoData['shipments']) && is_array($magentoData['shipments']) && count($magentoData['shipments']) > 0) {
-            foreach ($magentoData['shipments'] as $key => $value) {
-                $shipment = $value;
-                break;
+    /**
+     * @param $magentoData
+     * @param $data
+     * @return array
+     */
+    public function prepareAllShipmentAfterPost(& $magentoData, $data): array
+    {
+        $result = [];
+        if (isset($data['payer']) && ($data['payer'] == 'N' || $data['payer'] == 'O') && array_key_exists('name', $data['sender'])) {
+            $name = $data['sender']['name'];
+            if (isset($magentoData['data']['senders'][0][$name])) {
+                $result = $magentoData['data']['senders'][0][$name];
             }
         }
 
-        $shipmentName = '';
-        if (isset($shipment['name'])) {
-            $shipmentName = $shipment['name'];
-        }
-        //sprawdzamy czy mozemy nadac kuriera
-        if ($this->canCourier($magentoData, $shipmentName)) {
-            $magentoData['courier'] = true;
-        } else {
-            $magentoData['courier'] = false;
-        }
-        //pobieramy nadawce
-        $sender = array();
-        if (isset($shipment['senderName']) && isset($magentoData['senders'][$shipment['senderName']])) {
-            $sender = $magentoData['senders'][$shipment['senderName']];
-        } else {
-            foreach ($magentoData['senders'] as $key => $value) {
-                $sender = $value;
-                break;
-            }
-        }
-        //zmianna dla platnik 3 strona
-        $sender['name2'] = '';
-
-        //pobieramy dane odbiorcy
-        $reciver = $this->getFromOrderData($order);
-
-        //pobieranie domyslnej paczki
-        $shipment['Package'] = array();
-        if (isset($shipment['packageType'])) {
-            $package = array();
-            $package['packageType'] = $shipment['packageType'];
-            $package['width'] = $shipment['width'];
-            $package['height'] = $shipment['height'];
-            $package['length'] = $shipment['length'];
-            $package['weight'] = $shipment['weight'];
-            $package['quantity'] = $shipment['quantity'];
-            $package['nonStandard'] = $shipment['nonStandard'];
-            $shipment['Package'][] = $package;
-        }
-        $shipment['comment'] = $order->getIncrementId();
-        $shipment['shipmentDate'] = date('Y-m-d');
-        //ustawiamy domyslnego platnika
-        if (!isset($shipment['payer']) || empty($shipment['payer'])) {
-            $shipment['payer'] = 'N';
-        }
-
-        //tworzymy tablice z wszytskimi danymi
-        return array_merge($shipment, array_merge($reciver, $sender));
-    }
-
-    public function prepareAllShipmentAfterPost(& $magentoData, $data, $post) {
-        //pobieramy dane nadawcy gdy na formularzy jest disabled, nie ma w $_POST
-        $result = array();
-        if (isset($post['payer']) && ($post['payer'] == 'N' || $post['payer'] == 'O')) {
-            $name = $post['name'];
-            if (isset($magentoData['senders'][$name])) {
-                $result = $magentoData['senders'][$name];
-            }
-        }
-
-        //ustawimy czy mozna zamowic kuriera
         $shipmentName = '';
         if (isset($data['shipment'])) {
             $shipmentName = $data['shipment'];
@@ -483,29 +420,17 @@ class Shipment extends \Magento\Framework\App\Helper\AbstractHelper
         return array_merge($data, $result);
     }
 
-    public function prepareMagentoSender($magentoData) {
-        //dane nadawcy z panelu magento - do sekcji billing
-        $magentoSender = false;
-        if (isset($_POST['name'])) {
-            if (isset($magentoData['senders'][$_POST['name']])) {
-                $magentoSender = $magentoData['senders'][$_POST['name']];
-            }
-        }
-        if ($magentoSender === false) {
-            foreach ($magentoData['senders'] as $key => $value) {
-                $magentoSender = $value;
-                break;
-            }
-        }
-        return $magentoSender;
-    }
-
-    public function validate($post) {
+    /**
+     * @param $post
+     * @return bool
+     */
+    public function validate($post): bool
+    {
         if (!isset($post['payer']) || empty($post['payer'])) {
             $this->setError('Brak wybranego płatnika');
             return false;
         }
-        if (!isset($post['product']) || empty($post['product'])) {
+        if (!isset($post['package_product_type']['product_type']) || empty($post['package_product_type']['product_type'])) {
             $this->setError('Brak wybranego produktu');
             return false;
         }
@@ -520,17 +445,23 @@ class Shipment extends \Magento\Framework\App\Helper\AbstractHelper
         return true;
     }
 
-    public function saveShipmentParams($orderId, $params) {
+    /**
+     * @param $orderId
+     * @param $params
+     */
+    public function saveShipmentParams($orderId, $params)
+    {
         $order = $this->getOrder($orderId);
         $order->setDhlplSettings($params);
         $order->save();
     }
 
-    /** Metoda czyści nr telefonu tak aby były same cyfry
+    /**
      * @param $number
-     * @return mixed
+     * @return string
      */
-    public function clearPhone($number) {
+    public function clearPhone($number): string
+    {
         $number = str_replace(array(' ', '+', '-'), array('', '', ''), $number);
         return $number;
     }

@@ -1,130 +1,154 @@
 <?php
+declare(strict_types=1);
+
 namespace DHL\Dhl24pl\Controller\Adminhtml\Shipment;
 
+use DHL\Dhl24pl\Helper\Api as ApiHelper;
+use DHL\Dhl24pl\Helper\Shipment as ShipmentHelper;
+use Exception;
 use Magento\Backend\App\Action;
+use Magento\Backend\Model\View\Result\RedirectFactory;
+use Magento\Framework\App\ResponseInterface;
+use Magento\Framework\Controller\ResultInterface;
+use Magento\Framework\View\Result\Page;
+use Magento\Framework\View\Result\PageFactory;
+use Magento\Sales\Model\OrderRepository;
+use Psr\Log\LoggerInterface;
 
-class Create extends \Magento\Backend\App\Action
+/**
+ * Class Create
+ * @package DHL\Dhl24pl\Controller\Adminhtml\Shipment
+ */
+class Create extends Action
 {
     /**
-     * @var \Magento\Framework\View\Result\PageFactory
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
+     * @var ApiHelper
+     */
+    protected $apiHelper;
+
+    /**
+     * @var ShipmentHelper
+     */
+    protected $shipmentHelper;
+
+    /**
+     * @var OrderRepository
+     */
+    protected $orderRepository;
+
+    /**
+     * @var PageFactory
      */
     protected $resultPageFactory;
 
     /**
+     * Create constructor.
      * @param Action\Context $context
-     * @param \Magento\Framework\View\Result\PageFactory $resultPageFactory
-     * @param \Magento\Framework\Registry $registry
+     * @param RedirectFactory $redirectFactory
+     * @param LoggerInterface $logger
+     * @param ApiHelper $apiHelper
+     * @param ShipmentHelper $shipmentHelper
+     * @param PageFactory $resultPageFactory
+     * @param OrderRepository $orderRepository
      */
     public function __construct(
-    Action\Context $context,
-    \Magento\Framework\View\Result\PageFactory $resultPageFactory
-) {
-    $this->resultPageFactory = $resultPageFactory;
-    parent::__construct($context);
-}
+        Action\Context $context,
+        RedirectFactory $redirectFactory,
+        LoggerInterface $logger,
+        ApiHelper $apiHelper,
+        ShipmentHelper $shipmentHelper,
+        PageFactory $resultPageFactory,
+        OrderRepository $orderRepository
+    ) {
+        $this->resultRedirectFactory = $redirectFactory;
+        $this->logger = $logger;
+        $this->apiHelper = $apiHelper;
+        $this->shipmentHelper = $shipmentHelper;
+        $this->resultPageFactory = $resultPageFactory;
+        $this->orderRepository = $orderRepository;
+
+        parent::__construct($context);
+    }
 
     /**
-     * {@inheritdoc}
+     * @return \Magento\Backend\Model\View\Result\Redirect|ResponseInterface|ResultInterface|Page
      */
-    protected function _isAllowed()
-{
-    return $this->_authorization->isAllowed('DHL_Dhl24pl::dhlpl');
-}
-
-    /**
-     * Init actions
-     *
-     * @return \Magento\Backend\Model\View\Result\Page
-     */
-    protected function _initAction()
-{
-
-    $resultPage = $this->resultPageFactory->create();
-    $resultPage->setActiveMenu('Magento_Sales::sales_order');
-    $resultPage->getConfig()->getTitle()->prepend(__('Orders'));
-    $resultPage->getConfig()->getTitle()->set('DHL24');
-    return $resultPage;
-}
-
-    public function execute() {
-        $shipmentHelper = $this->_objectManager->get('DHL\Dhl24pl\Helper\Shipment');
-        $apiHelper = $this->_objectManager->get('DHL\Dhl24pl\Helper\Api');
+    public function execute()
+    {
+        $resultPage = $this->resultPageFactory->create();
         $oid = $this->getRequest()->getParam('order_id');
-        $order = $shipmentHelper->getOrder($oid);
-        if (!$shipmentHelper->isOrder($order)) {
-            $this->messageManager->addError('Niepoprawne zamówienie');
-            $resultRedirect = $this->resultRedirectFactory->create();
-            $resultRedirect->setPath('sales/order/index');
-            return $resultRedirect;
+        try {
+            $magentoData = $this->apiHelper->getDataForShipment();
+        } catch (Exception $e) {
+            $this->messageManager->addErrorMessage('Unable to get Magento config from DHL API');
+            return $resultPage;
         }
-        if ($shipmentHelper->isAlreadyCreated($order)) {
-            $this->messageManager->addError('Dla wybranego zamówienia nie można utworzyć przesyłki');
-            $resultRedirect = $this->resultRedirectFactory->create();
-            $resultRedirect->setPath('sales/order/index');
-            return $resultRedirect;
-        }
-        $magentoData = $apiHelper->getMagentoFromDHL();
-        if ($magentoData['error'] !== false) {
-            $this->messageManager->addError($magentoData['error']);
-            $resultRedirect = $this->resultRedirectFactory->create();
-            $resultRedirect->setPath('sales/order/index');
-            return $resultRedirect;
-        }
-
-        $magentoData = $magentoData['data'];
-        $allShipment = $shipmentHelper->prepareAllShipment($magentoData, $order);
-
         $data = $this->getRequest()->getPostValue();
-        if ($data) {
-            $allShipment = $shipmentHelper->prepareAllShipmentAfterPost($magentoData, $data, $_POST);
-            $magentoSender = $shipmentHelper->prepareMagentoSender($magentoData);
-            if ($shipmentHelper->validate($allShipment)) {
-                try {
-                    if ($shipmentHelper->isLm() && $shipmentHelper->isLmShipment($allShipment)) {
-                        $result = $apiHelper->createServicePointShipment($allShipment, $magentoData, $magentoSender);
-                        $params = array(
-                            'lp' => $result->createShipmentResult->shipmentNumber,
-                            'labeltype' => $result->createShipmentResult->label->labelType,
-                            'type' => 'SERVICEPOINT'
-                        );
-                        $shipmentHelper->saveShipmentParams($oid, json_encode($params));
 
-                        $this->getResponse ()
-                            ->setHeader ( 'Content-type', $result->createShipmentResult->label->labelFormat )
-                            ->setHeader ('Content-Disposition', 'attachment' . '; filename=' . $result->createShipmentResult->label->labelName );
-                        $this->getResponse ()->setBody(base64_decode($result->createShipmentResult->label->labelContent));
-                    } else {
-                        $result = $apiHelper->createWebapiShipment($allShipment, $magentoData, $magentoSender);
-                        $params = array(
-                            'lp' => $result->createShipmentResult->shipmentNotificationNumber,
-                            'labeltype' => $result->createShipmentResult->label->labelType,
-                            'type' => 'WEBAPI'
-                        );
-                        $shipmentHelper->saveShipmentParams($oid, json_encode($params));
-                        $name = $result->createShipmentResult->shipmentNotificationNumber . '.pdf';
-                        if ($result->createShipmentResult->label->labelType == 'ZBLP') {
-                            $name = $result->createShipmentResult->shipmentNotificationNumber . '.zpl';
+        if ($data) {
+            try {
+                $order = $this->orderRepository->get($oid);
+            } catch (Exception $e) {
+                $this->messageManager->addErrorMessage('Unable to get Order');
+                return $resultPage;
+            }
+            $parcelData = [];
+            if($order->getDhlplParcelshop() != NULL) {
+                $parcelData = json_decode($order->getDhlplParcelshop(), true);
+            }
+
+            $allShipment = $this->shipmentHelper->prepareAllShipmentAfterPost($magentoData, $data);
+            $allShipment['parcelData'] = $parcelData;
+
+            if ($this->shipmentHelper->validate($allShipment)) {
+                try {
+                    $result = $this->apiHelper->createShipment($allShipment, $magentoData);
+
+                    if ($result != null) {
+                        $shipmentNumber = $this->apiHelper->shouldUseServicePointApi() ? $result->createShipmentResult->shipmentNumber : $result->createShipmentResult->shipmentNotificationNumber;
+                        $returnShipmentNumber = '';
+
+                        if($this->apiHelper->shouldCreateReturn()) {
+                            $returnShipmentResult = $this->apiHelper->createReturnShipment($allShipment, $magentoData, $shipmentNumber);
+                            if (is_array($returnShipmentResult->createShipmentReturnResult->item)) {
+                                $returnShipmentNumber = array_map(function ($item) {
+                                    return $item->shipmentNotificationNumber;
+                                }, $returnShipmentResult->createShipmentReturnResult->item);
+                            } else {
+                                $returnShipmentNumber = [$returnShipmentResult->createShipmentReturnResult->item->shipmentNotificationNumber];
+                            }
                         }
 
-                        $this->getResponse ()
-                            ->setHeader ( 'Content-type', $result->createShipmentResult->label->labelFormat )
-                            ->setHeader ('Content-Disposition', 'attachment' . '; filename=' . $name );
-                        $this->getResponse ()->setBody(base64_decode($result->createShipmentResult->label->labelContent));
+                        $params = array(
+                            'lp' => $shipmentNumber,
+                            'returnlp' => $returnShipmentNumber,
+                            'labeltype' => $result->createShipmentResult->label->labelType,
+                            'type' => $this->apiHelper->shouldUseServicePointApi() ? 'SERVICEPOINT' : 'WEBAPI',
+                        );
+
+                        if (property_exists($result->createShipmentResult, 'dispatchNotificationNumber')) {
+                            $params['dispatchNotificationNumber'] = $result->createShipmentResult->dispatchNotificationNumber;
+                        }
+
+                        $this->shipmentHelper->saveShipmentParams($oid, json_encode($params));
+
+                        $this->messageManager->addSuccessMessage('List przewozowy został poprawnie utworzony!');
+                        return $this->resultRedirectFactory->create()->setPath('sales/order/index');
                     }
-                } catch (\Exception $e) {
-                    $shipmentHelper->setError($e->getMessage());
+                } catch (Exception $e) {
+                    $this->shipmentHelper->setError($e->getMessage());
                 }
             }
         }
-        if ($shipmentHelper->isError()) {
-            $this->messageManager->addError($shipmentHelper->getError());
+        if ($this->shipmentHelper->isError()) {
+            $this->messageManager->addErrorMessage($this->shipmentHelper->getError());
         }
 
-        $resultPage = $this->_initAction();
-        $resultPage->getConfig()->getTitle()->prepend(sprintf("#%s", $order->getIncrementId()));
-        $resultPage->getLayout()->getBlock('dhl_dhl24pl_shipment_create')->setShipmentValues($allShipment);
-        $resultPage->getLayout()->getBlock('dhl_dhl24pl_shipment_create')->setMagentoData($magentoData);
-        $resultPage->getLayout()->getBlock('dhl_dhl24pl_shipment_create')->setOrderId($oid);
         return $resultPage;
     }
 }

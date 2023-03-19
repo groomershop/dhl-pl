@@ -1,3 +1,4 @@
+
 console.log('init DHL/Dhl24pl/view/frontend/web/js/view/shipping-ovverride.js')
 define(
     [
@@ -50,15 +51,16 @@ define(
         $t
     ) {
         'use strict';
-
         var popUp = null;
-
         return Component.extend({
             defaults: {
                 template: 'Magento_Checkout/shipping',
                 shippingFormTemplate: 'Magento_Checkout/shipping-address/form',
                 shippingMethodListTemplate: 'Magento_Checkout/shipping-address/shipping-method-list',
-                shippingMethodItemTemplate: 'Magento_Checkout/shipping-address/shipping-method-item'
+                shippingMethodItemTemplate: 'Magento_Checkout/shipping-address/shipping-method-item',
+                imports: {
+                    countryOptions: '${ $.parentName }.shippingAddress.shipping-address-fieldset.country_id:indexedOptions'
+                }
             },
             visible: ko.observable(!quote.isVirtual()),
             errorValidationMessage: ko.observable(false),
@@ -68,7 +70,6 @@ define(
             isNewAddressAdded: ko.observable(false),
             saveInAddressBook: 1,
             quoteIsVirtual: quote.isVirtual(),
-
             /**
              * @return {exports}
              */
@@ -76,10 +77,8 @@ define(
                 var self = this,
                     hasNewAddress,
                     fieldsetName = 'checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset';
-
                 this._super();
                 shippingRatesValidator.initFields(fieldsetName);
-
                 if (!quote.isVirtual()) {
                     stepNavigator.registerStep(
                         'shipping',
@@ -90,26 +89,20 @@ define(
                     );
                 }
                 checkoutDataResolver.resolveShippingAddress();
-
                 hasNewAddress = addressList.some(function (address) {
                     return address.getType() == 'new-customer-address';
                 });
-
                 this.isNewAddressAdded(hasNewAddress);
-
                 this.isFormPopUpVisible.subscribe(function (value) {
                     if (value) {
                         self.getPopUp().openModal();
                     }
                 });
-
                 quote.shippingMethod.subscribe(function () {
                     self.errorValidationMessage(false);
                 });
-
                 registry.async('checkoutProvider')(function (checkoutProvider) {
                     var shippingAddressData = checkoutData.getShippingAddressFromData();
-
                     if (shippingAddressData) {
                         checkoutProvider.set(
                             'shippingAddress',
@@ -120,24 +113,20 @@ define(
                         checkoutData.setShippingAddressFromData(shippingAddressData);
                     });
                 });
-
                 return this;
             },
-
             /**
              * Load data from server for shipping step
              */
             navigate: function () {
                 //load data from server for shipping step
             },
-
             /**
              * @return {*}
              */
             getPopUp: function () {
                 var self = this,
                     buttons;
-
                 if (!popUp) {
                     buttons = this.popUpForm.options.buttons;
                     this.popUpForm.options.buttons = [
@@ -159,32 +148,26 @@ define(
                     };
                     popUp = modal(this.popUpForm.options, $(this.popUpForm.element));
                 }
-
                 return popUp;
             },
-
             /**
              * Show address form popup
              */
             showFormPopUp: function () {
                 this.isFormPopUpVisible(true);
             },
-
             /**
              * Save new shipping address
              */
             saveNewAddress: function () {
                 var addressData,
                     newShippingAddress;
-
                 this.source.set('params.invalid', false);
                 this.source.trigger('shippingAddress.data.validate');
-
                 if (!this.source.get('params.invalid')) {
                     addressData = this.source.get('shippingAddress');
                     // if user clicked the checkbox, its value is true or false. Need to convert.
                     addressData.save_in_address_book = this.saveInAddressBook ? 1 : 0;
-
                     // New address must be selected as a shipping address
                     newShippingAddress = createShippingAddress(addressData);
                     selectShippingAddress(newShippingAddress);
@@ -194,7 +177,6 @@ define(
                     this.isNewAddressAdded(true);
                 }
             },
-
             /**
              * Shipping Method View
              */
@@ -206,7 +188,6 @@ define(
                         : null;
                 }
             ),
-
             /**
              * @param {Object} shippingMethod
              * @return {Boolean}
@@ -214,10 +195,8 @@ define(
             selectShippingMethod: function (shippingMethod) {
                 selectShippingMethodAction(shippingMethod);
                 checkoutData.setSelectedShippingRate(shippingMethod.carrier_code + '_' + shippingMethod.method_code);
-
                 return true;
             },
-
             /**
              * Set shipping information handler
              */
@@ -230,7 +209,6 @@ define(
                     );
                 }
             },
-
             /**
              * @return {Boolean}
              */
@@ -239,34 +217,28 @@ define(
                     addressData,
                     loginFormSelector = 'form[data-role=email-with-possible-login]',
                     emailValidationResult = customer.isLoggedIn();
-
                 if (!quote.shippingMethod()) {
                     this.errorValidationMessage('Please specify a shipping method.');
-
                     return false;
                 }
                 //DHL_Dhl24pl START
-                if (quote.shippingMethod().method_code == 'parcelshop' && quote.shippingMethod().carrier_code == 'dhl_dhl24pl') {
-                    if (!$('#parceslhop_sap').val()) {
+                if ((quote.shippingMethod().method_code == 'parcelshop' || quote.shippingMethod().method_code == 'parcelshop_cod') && quote.shippingMethod().carrier_code == 'dhl_dhl24pl') {
+                    if (!$('#parcelshop_sap').val()) {
                         this.errorValidationMessage('Należy wybrać Parcelshop');
                         return false;
                     }
                 }
                 //DHL_Dhl24pl END
-
                 if (!customer.isLoggedIn()) {
                     $(loginFormSelector).validation();
                     emailValidationResult = Boolean($(loginFormSelector + ' input[name=username]').valid());
                 }
-
                 if (this.isFormInline) {
                     this.source.set('params.invalid', false);
                     this.source.trigger('shippingAddress.data.validate');
-
                     if (this.source.get('shippingAddress.custom_attributes')) {
                         this.source.trigger('shippingAddress.custom_attributes.data.validate');
                     }
-
                     if (this.source.get('params.invalid') ||
                         !quote.shippingMethod().method_code ||
                         !quote.shippingMethod().carrier_code ||
@@ -274,15 +246,12 @@ define(
                     ) {
                         return false;
                     }
-
                     shippingAddress = quote.shippingAddress();
                     addressData = addressConverter.formAddressDataToQuoteAddress(
                         this.source.get('shippingAddress')
                     );
-
                     //Copy form data to quote shipping address object
                     for (var field in addressData) {
-
                         if (addressData.hasOwnProperty(field) &&
                             shippingAddress.hasOwnProperty(field) &&
                             typeof addressData[field] != 'function' &&
@@ -295,19 +264,15 @@ define(
                             break;
                         }
                     }
-
                     if (customer.isLoggedIn()) {
                         shippingAddress.save_in_address_book = 1;
                     }
                     selectShippingAddress(shippingAddress);
                 }
-
                 if (!emailValidationResult) {
                     $(loginFormSelector + ' input[name=username]').focus();
-
                     return false;
                 }
-
                 return true;
             }
         });

@@ -1,0 +1,896 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">shipment_create.shipment_create_data_source</item>
+        </item>
+        <item name="label" xsi:type="string" translate="true">Szczegóły przesyłki</item>
+    </argument>
+    <settings>
+        <buttons>
+            <button name="save" class="DHL\Dhl24pl\Block\Adminhtml\Edit\SaveButton"/>
+            <button name="back" class="DHL\Dhl24pl\Block\Adminhtml\Edit\BackButton"/>
+        </buttons>
+        <layout>
+            <navContainerName>left</navContainerName>
+            <type>tabs</type>
+        </layout>
+        <deps>
+            <dep>shipment_create.shipment_create_data_source</dep>
+        </deps>
+    </settings>
+    <dataSource name="shipment_create_data_source">
+        <argument name="data" xsi:type="array">
+            <item name="js_config" xsi:type="array">
+                <item name="component" xsi:type="string">Magento_Ui/js/form/provider</item>
+            </item>
+        </argument>
+        <settings>
+            <submitUrl path="dhl/shipment/create"/>
+        </settings>
+        <dataProvider class="DHL\Dhl24pl\Model\Shipment\DataProvider" name="shipment_create_data_source">
+            <settings>
+                <requestFieldName>order_id</requestFieldName>
+                <primaryFieldName>order_id</primaryFieldName>
+            </settings>
+        </dataProvider>
+    </dataSource>
+    <fieldset name="payer">
+        <argument name="data" xsi:type="array">
+            <item name="config" xsi:type="array">
+                <item name="label" xsi:type="string" translate="true">Tworzenie przesyłki</item>
+                <item name="sortOrder" xsi:type="number">10</item>
+            </item>
+        </argument>
+        <field name="packageSchemaUrl">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="formElement" xsi:type="string">hidden</item>
+                    <item name="source" xsi:type="string">payer</item>
+                    <item name="dataScope" xsi:type="string">packageSchemaUrl</item>
+                </item>
+            </argument>
+        </field>
+        <field name="package_schema">
+            <argument name="data" xsi:type="array">
+                <item name="options" xsi:type="object">DHL\Dhl24pl\Model\Config\Source\Shipment</item>
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="label" translate="true" xsi:type="string">Przesyłka</item>
+                    <item name="component" xsi:type="string">DHL_Dhl24pl/js/form/packageSchema</item>
+                    <item name="formElement" xsi:type="string">select</item>
+                    <item name="source" xsi:type="string">payer</item>
+                    <item name="dataScope" xsi:type="string">package_schema</item>
+                </item>
+            </argument>
+        </field>
+        <radioset name="payerType">
+            <settings>
+                <label translate="true">Płatnik jest</label>
+                <options>
+                    <option name="0" xsi:type="array">
+                        <item name="value" xsi:type="string">N</item>
+                        <item name="label" xsi:type="string" translate="true">Nadawcą</item>
+                    </option>
+                    <option name="1" xsi:type="array">
+                        <item name="value" xsi:type="string">T</item>
+                        <item name="label" xsi:type="string" translate="true">Zleceniodawcą</item>
+                    </option>
+                </options>
+            </settings>
+        </radioset>
+    </fieldset>
+    <fieldset name="sender">
+        <argument name="data" xsi:type="array">
+            <item name="config" xsi:type="array">
+                <item name="label" xsi:type="string" translate="true">Nadawca</item>
+                <item name="sortOrder" xsi:type="number">20</item>
+            </item>
+        </argument>
+        <field name="sender_country">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="formElement" xsi:type="string">hidden</item>
+                    <item name="source" xsi:type="string">sender</item>
+                    <item name="dataScope" xsi:type="string">sender_country</item>
+                </item>
+            </argument>
+        </field>
+        <field name="url">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="formElement" xsi:type="string">hidden</item>
+                    <item name="source" xsi:type="string">sender</item>
+                    <item name="dataScope" xsi:type="string">url</item>
+                </item>
+            </argument>
+        </field>
+        <field name="name">
+            <argument name="data" xsi:type="array">
+                <item name="options" xsi:type="object">DHL\Dhl24pl\Model\Config\Source\Sender</item>
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="label" translate="true" xsi:type="string">Nazwa</item>
+                    <item name="component" xsi:type="string">DHL_Dhl24pl/js/form/options</item>
+                    <item name="formElement" xsi:type="string">select</item>
+                    <item name="source" xsi:type="string">sender</item>
+                    <item name="dataScope" xsi:type="string">name</item>
+                </item>
+            </argument>
+        </field>
+        <field name="personName">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">Osoba kontaktowa</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="source" xsi:type="string">sender</item>
+                    <item name="dataScope" xsi:type="string">personName</item>
+                </item>
+            </argument>
+        </field>
+        <field name="street">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">Ulica</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="source" xsi:type="string">sender</item>
+                    <item name="dataScope" xsi:type="string">street</item>
+                </item>
+            </argument>
+        </field>
+        <field name="houseNumber">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">Numer domu</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="source" xsi:type="string">sender</item>
+                    <item name="dataScope" xsi:type="string">houseNumber</item>
+                </item>
+            </argument>
+        </field>
+        <field name="apartmentNumber">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">Numer lokalu</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="source" xsi:type="string">sender</item>
+                    <item name="dataScope" xsi:type="string">apartmentNumber</item>
+                </item>
+            </argument>
+        </field>
+        <field name="postcode">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">Kod pocztowy</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="source" xsi:type="string">sender</item>
+                    <item name="dataScope" xsi:type="string">postcode</item>
+                </item>
+            </argument>
+        </field>
+        <field name="city">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">Miejscowość</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="source" xsi:type="string">sender</item>
+                    <item name="dataScope" xsi:type="string">city</item>
+                </item>
+            </argument>
+        </field>
+        <field name="phoneNumber">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">Tel kontaktowy</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="source" xsi:type="string">sender</item>
+                    <item name="dataScope" xsi:type="string">phoneNumber</item>
+                </item>
+            </argument>
+        </field>
+        <field name="emailAddress">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">Email kontaktowy</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="source" xsi:type="string">sender</item>
+                    <item name="dataScope" xsi:type="string">emailAddress</item>
+                </item>
+            </argument>
+        </field>
+        <field name="sap">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">Numer klienta</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="source" xsi:type="string">sender</item>
+                    <item name="dataScope" xsi:type="string">sap</item>
+                </item>
+            </argument>
+        </field>
+    </fieldset>
+    <fieldset name="recipient">
+        <argument name="data" xsi:type="array">
+            <item name="config" xsi:type="array">
+                <item name="label" xsi:type="string" translate="true">Odbiorca</item>
+                <item name="sortOrder" xsi:type="number">30</item>
+            </item>
+        </argument>
+        <field name="addressType" formElement="checkbox">
+            <settings>
+                <label translate="true">Klient B2B</label>
+            </settings>
+            <formElements>
+                <checkbox>
+                    <settings>
+                        <prefer>checkbox</prefer>
+                        <valueMap>
+                            <map name="false" xsi:type="boolean">false</map>
+                            <map name="true" xsi:type="boolean">true</map>
+                        </valueMap>
+                    </settings>
+                </checkbox>
+            </formElements>
+        </field>
+        <field name="personName">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">Osoba kontaktowa</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="source" xsi:type="string">recipient</item>
+                    <item name="dataScope" xsi:type="string">personName</item>
+                </item>
+            </argument>
+        </field>
+        <field name="street">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">Ulica</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="source" xsi:type="string">recipient</item>
+                    <item name="dataScope" xsi:type="string">street</item>
+                </item>
+            </argument>
+        </field>
+        <field name="houseNumber">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">Numer domu</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="source" xsi:type="string">recipient</item>
+                    <item name="dataScope" xsi:type="string">houseNumber</item>
+                </item>
+            </argument>
+        </field>
+        <field name="apartmentNumber">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">Numer lokalu</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="source" xsi:type="string">recipient</item>
+                    <item name="dataScope" xsi:type="string">apartmentNumber</item>
+                </item>
+            </argument>
+        </field>
+        <field name="postcode">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">Kod pocztowy</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="source" xsi:type="string">recipient</item>
+                    <item name="dataScope" xsi:type="string">postcode</item>
+                </item>
+            </argument>
+        </field>
+        <field name="city">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">Miejscowość</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="source" xsi:type="string">recipient</item>
+                    <item name="dataScope" xsi:type="string">city</item>
+                </item>
+            </argument>
+        </field>
+        <field name="recipient_country">
+            <argument name="data" xsi:type="array">
+                <item name="options" xsi:type="object">DHL\Dhl24pl\Model\Config\Source\Countries</item>
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="label" translate="true" xsi:type="string">Kraj</item>
+                    <item name="component" xsi:type="string">DHL_Dhl24pl/js/form/packageSchema</item>
+                    <item name="formElement" xsi:type="string">select</item>
+                    <item name="source" xsi:type="string">recipient</item>
+                    <item name="dataScope" xsi:type="string">recipient_country</item>
+                </item>
+            </argument>
+        </field>
+        <field name="phoneNumber">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">Tel kontaktowy</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="source" xsi:type="string">recipient</item>
+                    <item name="dataScope" xsi:type="string">phoneNumber</item>
+                </item>
+            </argument>
+        </field>
+        <field name="emailAddress">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">Email kontaktowy</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="source" xsi:type="string">recipient</item>
+                    <item name="dataScope" xsi:type="string">emailAddress</item>
+                </item>
+            </argument>
+        </field>
+    </fieldset>
+    <fieldset name="package">
+        <argument name="data" xsi:type="array">
+            <item name="config" xsi:type="array">
+                <item name="label" xsi:type="string" translate="true">Szczegóły przesyłki</item>
+                <item name="sortOrder" xsi:type="number">40</item>
+            </item>
+        </argument>
+        <field name="package_type">
+            <argument name="data" xsi:type="array">
+                <item name="options" xsi:type="object">DHL\Dhl24pl\Model\Config\Source\PackageType</item>
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="label" translate="true" xsi:type="string">Rodzaj przesyłki</item>
+                    <item name="component" xsi:type="string">DHL_Dhl24pl/js/form/packageType</item>
+                    <item name="formElement" xsi:type="string">select</item>
+                    <item name="source" xsi:type="string">package</item>
+                    <item name="dataScope" xsi:type="string">package_type</item>
+                </item>
+            </argument>
+        </field>
+        <field name="weight">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">Waga</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="source" xsi:type="string">package</item>
+                    <item name="dataScope" xsi:type="string">weight</item>
+                </item>
+            </argument>
+        </field>
+        <field name="width">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">Szerokość</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="source" xsi:type="string">package</item>
+                    <item name="dataScope" xsi:type="string">width</item>
+                </item>
+            </argument>
+        </field>
+        <field name="height">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">Wysokość</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="source" xsi:type="string">package</item>
+                    <item name="dataScope" xsi:type="string">height</item>
+                </item>
+            </argument>
+        </field>
+        <field name="length">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">Długość</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="source" xsi:type="string">package</item>
+                    <item name="dataScope" xsi:type="string">length</item>
+                </item>
+            </argument>
+        </field>
+        <field name="quantity">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">Ilość</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="source" xsi:type="string">package</item>
+                    <item name="dataScope" xsi:type="string">quantity</item>
+                </item>
+            </argument>
+        </field>
+        <field name="nonStandard" formElement="checkbox">
+            <settings>
+                <dataType>boolean</dataType>
+                <label translate="true">Niestandard</label>
+                <dataScope>nonStandard</dataScope>
+            </settings>
+            <formElements>
+                <checkbox>
+                    <settings>
+                        <prefer>checkbox</prefer>
+                        <valueMap>
+                            <map name="false" xsi:type="boolean">false</map>
+                            <map name="true" xsi:type="boolean">true</map>
+                        </valueMap>
+                    </settings>
+                </checkbox>
+            </formElements>
+        </field>
+        <field name="content">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">Zawartość</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="source" xsi:type="string">package</item>
+                    <item name="dataScope" xsi:type="string">content</item>
+                </item>
+            </argument>
+        </field>
+    </fieldset>
+    <fieldset name="package_product_type">
+        <argument name="data" xsi:type="array">
+            <item name="config" xsi:type="array">
+                <item name="label" xsi:type="string" translate="true">Rodzaj usługi przewozowej</item>
+                <item name="sortOrder" xsi:type="number">50</item>
+            </item>
+        </argument>
+        <field name="product_type">
+            <argument name="data" xsi:type="array">
+                <item name="options" xsi:type="object">DHL\Dhl24pl\Model\Config\Source\ProductType</item>
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="label" translate="true" xsi:type="string">Rodzaj przesyłki</item>
+                    <item name="formElement" xsi:type="string">select</item>
+                    <item name="source" xsi:type="string">package_product_type</item>
+                    <item name="dataScope" xsi:type="string">product_type</item>
+                </item>
+            </argument>
+        </field>
+        <field name="ek_country">
+            <argument name="data" xsi:type="array">
+                <item name="options" xsi:type="object">DHL\Dhl24pl\Model\Config\Source\Country</item>
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="label" translate="true" xsi:type="string">Kraj (DHL PARCEL CONNECT)</item>
+                    <item name="formElement" xsi:type="string">select</item>
+                    <item name="source" xsi:type="string">package_product_type</item>
+                    <item name="dataScope" xsi:type="string">ek_country</item>
+                </item>
+            </argument>
+        </field>
+        <field name="ek_packstation">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">Packstation (DHL PARCEL CONNECT)</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="source" xsi:type="string">package_product_type</item>
+                    <item name="dataScope" xsi:type="string">ek_packstation</item>
+                </item>
+            </argument>
+        </field>
+        <field name="ek_postfiliale">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">Postfiliale (DHL PARCEL CONNECT)</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="source" xsi:type="string">package_product_type</item>
+                    <item name="dataScope" xsi:type="string">ek_postfiliale</item>
+                </item>
+            </argument>
+        </field>
+        <field name="ek_postnummer">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">Postnummer (DHL PARCEL CONNECT)</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="source" xsi:type="string">package_product_type</item>
+                    <item name="dataScope" xsi:type="string">ek_postnummer</item>
+                </item>
+            </argument>
+        </field>
+    </fieldset>
+    <fieldset name="package_shipment">
+        <argument name="data" xsi:type="array">
+            <item name="config" xsi:type="array">
+                <item name="label" xsi:type="string" translate="true">Nadanie</item>
+                <item name="sortOrder" xsi:type="number">60</item>
+            </item>
+        </argument>
+        <field name="shipmentDate" formElement="select">
+            <settings>
+                <dataType>text</dataType>
+                <label translate="true">Data nadania</label>
+                <dataScope>shipmentDate</dataScope>
+            </settings>
+            <formElements>
+                <select>
+                    <settings>
+                        <options class="DHL\Dhl24pl\Model\Config\Source\Date" />
+                    </settings>
+                </select>
+            </formElements>
+        </field>
+        <field name="shipmentStartHour" formElement="select">
+            <settings>
+                <dataType>text</dataType>
+                <label translate="true">Godzina przyjazdu kuriera od</label>
+                <dataScope>shipmentStartHour</dataScope>
+            </settings>
+            <formElements>
+                <select>
+                    <settings>
+                        <options class="DHL\Dhl24pl\Model\Config\Source\Hours" />
+                    </settings>
+                </select>
+            </formElements>
+        </field>
+        <field name="shipmentEndHour" formElement="select">
+            <settings>
+                <dataType>text</dataType>
+                <label translate="true">Godzina przyjazdu kuriera do</label>
+                <dataScope>shipmentEndHour</dataScope>
+            </settings>
+            <formElements>
+                <select>
+                    <settings>
+                        <options class="DHL\Dhl24pl\Model\Config\Source\Hours" />
+                    </settings>
+                </select>
+            </formElements>
+        </field>
+    </fieldset>
+    <fieldset name="package_additional">
+        <argument name="data" xsi:type="array">
+            <item name="config" xsi:type="array">
+                <item name="label" xsi:type="string" translate="true"> Dostępne usługi dodatkowe</item>
+                <item name="sortOrder" xsi:type="number">70</item>
+            </item>
+        </argument>
+        <field name="insurance" formElement="checkbox">
+            <settings>
+                <label translate="true">Ubezpieczenie przesyłki</label>
+            </settings>
+            <formElements>
+                <checkbox>
+                    <settings>
+                        <prefer>checkbox</prefer>
+                        <valueMap>
+                            <map name="false" xsi:type="boolean">false</map>
+                            <map name="true" xsi:type="boolean">true</map>
+                        </valueMap>
+                    </settings>
+                </checkbox>
+            </formElements>
+        </field>
+        <field name="insuranceValue" formElement="input">
+            <settings>
+                <imports>
+                    <link name="visible">${$.parentName}.insurance:checked</link>
+                </imports>
+                <dataType>text</dataType>
+                <label translate="true">Kwota ubezpieczenia:</label>
+                <dataScope>insuranceValue</dataScope>
+            </settings>
+        </field>
+        <field name="collectOnDelivery" formElement="checkbox">
+            <settings>
+                <label translate="true">Zwrot pobrania (COD)</label>
+            </settings>
+            <formElements>
+                <checkbox>
+                    <settings>
+                        <prefer>checkbox</prefer>
+                        <valueMap>
+                            <map name="false" xsi:type="boolean">false</map>
+                            <map name="true" xsi:type="boolean">true</map>
+                        </valueMap>
+                    </settings>
+                </checkbox>
+            </formElements>
+        </field>
+        <field name="collectOnDeliveryValue" formElement="input">
+            <settings>
+                <imports>
+                    <link name="visible">${$.parentName}.collectOnDelivery:checked</link>
+                </imports>
+                <dataType>text</dataType>
+                <label translate="true">Kwota pobrania:</label>
+                <dataScope>collectOnDeliveryValue</dataScope>
+            </settings>
+        </field>
+        <field name="predeliveryInformation" formElement="checkbox">
+            <settings>
+                <label translate="true">Informacje przed doręczeniem (PDI)</label>
+            </settings>
+            <formElements>
+                <checkbox>
+                    <settings>
+                        <prefer>checkbox</prefer>
+                        <valueMap>
+                            <map name="false" xsi:type="boolean">false</map>
+                            <map name="true" xsi:type="boolean">true</map>
+                        </valueMap>
+                    </settings>
+                </checkbox>
+            </formElements>
+        </field>
+        <field name="returnOnDelivery" formElement="checkbox">
+            <settings>
+                <label translate="true">Zwrot potwierdzonych dokumentów (ROD)</label>
+            </settings>
+            <formElements>
+                <checkbox>
+                    <settings>
+                        <prefer>checkbox</prefer>
+                        <valueMap>
+                            <map name="false" xsi:type="boolean">false</map>
+                            <map name="true" xsi:type="boolean">true</map>
+                        </valueMap>
+                    </settings>
+                </checkbox>
+            </formElements>
+        </field>
+        <field name="proofOfDelivery" formElement="checkbox">
+            <settings>
+                <label translate="true">Potwierdzenie doręczenia (POD)</label>
+            </settings>
+            <formElements>
+                <checkbox>
+                    <settings>
+                        <prefer>checkbox</prefer>
+                        <valueMap>
+                            <map name="false" xsi:type="boolean">false</map>
+                            <map name="true" xsi:type="boolean">true</map>
+                        </valueMap>
+                    </settings>
+                </checkbox>
+            </formElements>
+        </field>
+        <field name="deliveryToNeighbour" formElement="checkbox">
+            <settings>
+                <label translate="true">Doręczenie do sąsiada</label>
+            </settings>
+            <formElements>
+                <checkbox>
+                    <settings>
+                        <prefer>checkbox</prefer>
+                        <valueMap>
+                            <map name="false" xsi:type="boolean">false</map>
+                            <map name="true" xsi:type="boolean">true</map>
+                        </valueMap>
+                    </settings>
+                </checkbox>
+            </formElements>
+        </field>
+        <field name="neighbour_name" formElement="input">
+            <settings>
+                <imports>
+                    <link name="visible">${$.parentName}.deliveryToNeighbour:checked</link>
+                </imports>
+                <dataType>text</dataType>
+                <label translate="true">Nazwa</label>
+                <dataScope>neighbour_name</dataScope>
+            </settings>
+        </field>
+        <field name="neighbour_postcode" formElement="input">
+            <settings>
+                <imports>
+                    <link name="visible">${$.parentName}.deliveryToNeighbour:checked</link>
+                </imports>
+                <dataType>text</dataType>
+                <label translate="true">Kod pocztowy</label>
+                <dataScope>neighbour_postcode</dataScope>
+            </settings>
+        </field>
+        <field name="neighbour_city" formElement="input">
+            <settings>
+                <imports>
+                    <link name="visible">${$.parentName}.deliveryToNeighbour:checked</link>
+                </imports>
+                <dataType>text</dataType>
+                <label translate="true">Miejscowość</label>
+                <dataScope>neighbour_city</dataScope>
+            </settings>
+        </field>
+        <field name="neighbour_street" formElement="input">
+            <settings>
+                <imports>
+                    <link name="visible">${$.parentName}.deliveryToNeighbour:checked</link>
+                </imports>
+                <dataType>text</dataType>
+                <label translate="true">Ulica</label>
+                <dataScope>neighbour_street</dataScope>
+            </settings>
+        </field>
+        <field name="neighbour_houseNumber" formElement="input">
+            <settings>
+                <imports>
+                    <link name="visible">${$.parentName}.deliveryToNeighbour:checked</link>
+                </imports>
+                <dataType>text</dataType>
+                <label translate="true">Numer domu</label>
+                <dataScope>neighbour_houseNumber</dataScope>
+            </settings>
+        </field>
+        <field name="neighbour_apartmentNumber" formElement="input">
+            <settings>
+                <imports>
+                    <link name="visible">${$.parentName}.deliveryToNeighbour:checked</link>
+                </imports>
+                <dataType>text</dataType>
+                <label translate="true">Numer lokalu</label>
+                <dataScope>neighbour_apartmentNumber</dataScope>
+            </settings>
+        </field>
+        <field name="neighbour_phoneNumber" formElement="input">
+            <settings>
+                <imports>
+                    <link name="visible">${$.parentName}.deliveryToNeighbour:checked</link>
+                </imports>
+                <dataType>text</dataType>
+                <label translate="true">Tel kontaktowy</label>
+                <dataScope>neighbour_phoneNumber</dataScope>
+            </settings>
+        </field>
+        <field name="neighbour_emailAddress" formElement="input">
+            <settings>
+                <imports>
+                    <link name="visible">${$.parentName}.deliveryToNeighbour:checked</link>
+                </imports>
+                <dataType>text</dataType>
+                <label translate="true">Email kontaktowy</label>
+                <dataScope>neighbour_emailAddress</dataScope>
+            </settings>
+        </field>
+        <field name="deliveryToLM" formElement="checkbox">
+            <settings>
+                <label translate="true">Doręczenie do Parcelshop</label>
+            </settings>
+            <formElements>
+                <checkbox>
+                    <settings>
+                        <prefer>checkbox</prefer>
+                        <valueMap>
+                            <map name="false" xsi:type="boolean">false</map>
+                            <map name="true" xsi:type="boolean">true</map>
+                        </valueMap>
+                    </settings>
+                </checkbox>
+            </formElements>
+        </field>
+        <field name="lm_sap" formElement="input">
+            <settings>
+                <imports>
+                    <link name="visible">${$.parentName}.deliveryToLM:checked</link>
+                </imports>
+                <dataType>text</dataType>
+                <label translate="true">Nr SAP</label>
+                <dataScope>lm_sap</dataScope>
+            </settings>
+        </field>
+        <field name="deliveryEvening" formElement="checkbox">
+            <settings>
+                <label translate="true">Doręczenie w godzinach 18-22</label>
+            </settings>
+            <formElements>
+                <checkbox>
+                    <settings>
+                        <prefer>checkbox</prefer>
+                        <valueMap>
+                            <map name="false" xsi:type="boolean">false</map>
+                            <map name="true" xsi:type="boolean">true</map>
+                        </valueMap>
+                    </settings>
+                </checkbox>
+            </formElements>
+        </field>
+        <field name="deliveryOnSaturday" formElement="checkbox">
+            <settings>
+                <label translate="true">Doręczenie w sobotę</label>
+            </settings>
+            <formElements>
+                <checkbox>
+                    <settings>
+                        <prefer>checkbox</prefer>
+                        <valueMap>
+                            <map name="false" xsi:type="boolean">false</map>
+                            <map name="true" xsi:type="boolean">true</map>
+                        </valueMap>
+                    </settings>
+                </checkbox>
+            </formElements>
+        </field>
+        <field name="pickupOnSaturday" formElement="checkbox">
+            <settings>
+                <label translate="true">Nadanie w sobotę</label>
+            </settings>
+            <formElements>
+                <checkbox>
+                    <settings>
+                        <prefer>checkbox</prefer>
+                        <valueMap>
+                            <map name="false" xsi:type="boolean">false</map>
+                            <map name="true" xsi:type="boolean">true</map>
+                        </valueMap>
+                    </settings>
+                </checkbox>
+            </formElements>
+        </field>
+        <field name="selfCollect" formElement="checkbox">
+            <settings>
+                <label translate="true">Odbiór własny</label>
+            </settings>
+            <formElements>
+                <checkbox>
+                    <settings>
+                        <prefer>checkbox</prefer>
+                        <valueMap>
+                            <map name="false" xsi:type="boolean">false</map>
+                            <map name="true" xsi:type="boolean">true</map>
+                        </valueMap>
+                    </settings>
+                </checkbox>
+            </formElements>
+        </field>
+        <field name="costsCenter">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">MPK</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="source" xsi:type="string">package_additional</item>
+                    <item name="dataScope" xsi:type="string">costsCenter</item>
+                </item>
+            </argument>
+        </field>
+        <field name="reference">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">Referencja</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="source" xsi:type="string">package_additional</item>
+                    <item name="dataScope" xsi:type="string">reference</item>
+                </item>
+            </argument>
+        </field>
+        <field name="comment">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">Uwagi</item>
+                    <item name="formElement" xsi:type="string">textarea</item>
+                    <item name="source" xsi:type="string">package_additional</item>
+                    <item name="dataScope" xsi:type="string">comment</item>
+                </item>
+            </argument>
+        </field>
+    </fieldset>
+</form>

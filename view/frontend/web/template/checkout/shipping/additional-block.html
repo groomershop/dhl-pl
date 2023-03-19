@@ -1,4 +1,14 @@
-<div id="dhl_dhl24pl_courier_block"   data-bind="visible: getVisibleCourier()">
+<div id="dhl_dhl24pl_neighbours_block" data-bind="visible: isCourier()">
+    <div class="field">
+        <div class="col col-method">
+            <input type='checkbox' id="neighbours_block" name='is_neighbours' class='input-text' value='' />
+            <label class="label" for="neighbours_block">
+                <span>Dostawa do sąsiada</span>
+            </label>
+        </div>
+    </div>
+</div>
+<div id="dhl_dhl24pl_courier_block" data-bind="visible: getVisibleCourier()">
     <div class="form form-shipping-address">
         <div class="fieldset address">
             <label class="label">
@@ -71,20 +81,22 @@
         </div>
     </div>
 </div>
-<div id="dhl_dhl24pl_parcelshop_block"  data-bind="visible: getVisibleParcelshop()">
+<div id="dhl_dhl24pl_parcelshop_block"  data-bind="visible: isParcelshop()">
     <input type="hidden" id="lmMapUrl" data-bind="value: getLmmapUrl()" />
     <div class="form form-shipping-address">
         <div class="fieldset address">
             <label class="label">
                 <span><strong><a style="display: block;margin-bottom: 10px;margin-top: 10px;" id="dhllink" href="javascript:;" >Wyszukaj Parcelshop na mapie</a></strong></span>
             </label>
-            <div class="field _required" name="shippingAddress.parceslhop_sap">
+            <div class="field _required" name="shippingAddress.parcelshop_sap">
                 <label class="label">
                     <span >Wybrany Parcelshop</span>
                 </label>
                 <div class="control">
                     <span id="parceslhop_desc"></span>
-                    <input data-validate="{required:true}" type='hidden' id="parceslhop_sap" name='parceslhop_sap' class='required-entry input-text' value='' />
+                    <input data-validate="{required:true}" type='hidden' id="parcelshop_sap" name='parcelshop_sap' class='required-entry input-text' value='' />
+                    <input data-validate="{required:true}" type='hidden' id="parcelshop_zip" name='parcelshop_zip' class='required-entry input-text' value='' />
+                    <input data-validate="{required:true}" type='hidden' id="parcelshop_city" name='parcelshop_city' class='required-entry input-text' value='' />
                 </div>
             </div>
         </div>

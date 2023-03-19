@@ -40,6 +40,7 @@ define(
                         shipping_carrier_code: quote.shippingMethod().carrier_code,
 						//DHL_Dhl24pl START
                         extension_attributes: {
+                            is_neighbours: jQuery('[name="is_neighbours"]').val(),
                             courier_neighbor_name: jQuery('[name="courier_neighbor_name"]').val(),
                             courier_neighbor_postcode: jQuery('[name="courier_neighbor_postcode"]').val(),
                             courier_neighbor_city: jQuery('[name="courier_neighbor_city"]').val(),
@@ -48,7 +49,9 @@ define(
                             courier_neighbor_apartmentNumber: jQuery('[name="courier_neighbor_apartmentNumber"]').val(),
                             courier_neighbor_phoneNumber: jQuery('[name="courier_neighbor_phoneNumber"]').val(),
                             courier_neighbor_emailAddress: jQuery('[name="courier_neighbor_emailAddress"]').val(),
-                            parceslhop_sap: jQuery('[name="parceslhop_sap"]').val()
+                            parcelshop_sap: jQuery('[name="parcelshop_sap"]').val(),
+                            parcelshop_zip: jQuery('[name="parcelshop_zip"]').val(),
+                            parcelshop_city: jQuery('[name="parcelshop_city"]').val()
                         }
                         //DHL_Dhl24pl END
                     }

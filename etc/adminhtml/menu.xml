@@ -1,6 +1,10 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
     <menu>
-        <add id="DHL_Dhl24pl::dhlpl_pnp" title="PNP" translate="title" module="DHL_Dhl24pl" sortOrder="100" parent="Magento_Sales::sales_operation" action="dhl/shipment/pnp" resource="DHL_Dhl24pl::dhlpl_pnp" />
+        <add id="DHL_Dhl24pl::index" title="DHL" module="DHL_Dhl24pl" sortOrder="51" resource="DHL_Dhl24pl::index"/>
+        <add id="DHL_Dhl24pl::sender" title="Lista szablonów nadawców" module="DHL_Dhl24pl" sortOrder="10" action="dhl/sender" resource="DHL_Dhl24pl::sender" parent="DHL_Dhl24pl::index"/>
+        <add id="DHL_Dhl24pl::package" title="Lista szablonów przesyłek" module="DHL_Dhl24pl" sortOrder="20" action="dhl/package" resource="DHL_Dhl24pl::package" parent="DHL_Dhl24pl::index"/>
+        <add id="DHL_Dhl24pl::dhl_shipping" title="DHL24" module="DHL_Dhl24pl" sortOrder="30" parent="DHL_Dhl24pl::index" action="adminhtml/system_config/edit/section/carriers/" resource="DHL_Dhl24pl::dhl_shipping"/>
+        <add id="DHL_Dhl24pl::dhl_configuration" title="Configuration" module="DHL_Dhl24pl" sortOrder="40" parent="DHL_Dhl24pl::index" action="adminhtml/system_config/edit/section/dhl24pl/" resource="DHL_Dhl24pl::dhl_configuration"/>
     </menu>
 </config>

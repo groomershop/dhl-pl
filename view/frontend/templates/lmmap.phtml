@@ -3,7 +3,9 @@
     /*<![CDATA[*/
     function listenMessage(msg) {
         var point = JSON.parse(msg.data);
-        window.opener.document.getElementById('parceslhop_sap').value=point.sap;
+        window.opener.document.getElementById('parcelshop_sap').value=point.sap;
+        window.opener.document.getElementById('parcelshop_zip').value=point.zip;
+        window.opener.document.getElementById('parcelshop_city').value=point.city;
         var name = point.name + ', ' + point.street + ' ' + point.streetNo;
         if (point.houseNo != '') {
             name += '/'+ point.houseNo;

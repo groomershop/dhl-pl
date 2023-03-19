@@ -1,15 +1,12 @@
 <?xml version="1.0"?>
-<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="admin-2columns-left" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <update handle="styles"/>
     <head>
         <title>DHL24</title>
-        <script src="DHL_Dhl24pl::js/dhl24pl.js" />
-        <css src="DHL_Dhl24pl::css/dhl24pl.css"/>
     </head>
     <body>
-
-		<referenceContainer name="content">
-            <block class="DHL\Dhl24pl\Block\Adminhtml\Shipment\Create" name="dhl_dhl24pl_shipment_create" template="DHL_Dhl24pl::create.phtml" />
+        <referenceContainer name="content">
+            <uiComponent name="shipment_create"/>
         </referenceContainer>
     </body>
 </page>

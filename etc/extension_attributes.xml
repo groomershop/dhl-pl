@@ -9,6 +9,9 @@
         <attribute code="courier_neighbor_apartmentNumber" type="string"/>
         <attribute code="courier_neighbor_phoneNumber" type="string"/>
         <attribute code="courier_neighbor_emailAddress" type="string"/>
-        <attribute code="parceslhop_sap" type="string"/>
+        <attribute code="parcelshop_sap" type="string"/>
+        <attribute code="parcelshop_zip" type="string"/>
+        <attribute code="parcelshop_city" type="string"/>
+        <attribute code="is_neighbours" type="string"/>
     </extension_attributes>
 </config>

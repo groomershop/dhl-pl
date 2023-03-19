@@ -1,13 +1,23 @@
 <?php
+declare(strict_types=1);
 
 namespace DHL\Dhl24pl\Block\System\Config;
 
 use Magento\Framework\Data\Form\Element\AbstractElement;
+use Magento\Config\Block\System\Config\Form\Field;
 
-class ChangeSelect extends \Magento\Config\Block\System\Config\Form\Field
+/**
+ * Class ChangeSelect
+ * @package DHL\Dhl24pl\Block\System\Config
+ */
+class ChangeSelect extends Field
 {
 
-    public function render(\Magento\Framework\Data\Form\Element\AbstractElement $element)
+    /**
+     * @param AbstractElement $element
+     * @return string
+     */
+    public function render(AbstractElement $element): string
     {
         $html = parent::render($element);
         $html .= '<script type="text/javascript">
@@ -23,11 +33,8 @@ class ChangeSelect extends \Magento\Config\Block\System\Config\Form\Field
 
         });
 
-</script>';
-
+        </script>';
 
         return $html;
     }
-
-
 }

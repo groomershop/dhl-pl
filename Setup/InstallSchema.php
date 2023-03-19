@@ -28,7 +28,7 @@ class InstallSchema implements InstallSchemaInterface
                 'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
                 'length'    => 1024,
                 'unsigned' => true,
-                'nullable' => false,
+                'nullable' => true,
                 'comment' => 'dhlpl_settings'
             ]
         );
@@ -40,7 +40,7 @@ class InstallSchema implements InstallSchemaInterface
                 'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
                 'length'    => 1024,
                 'unsigned' => true,
-                'nullable' => false,
+                'nullable' => true,
                 'comment' => 'dhlpl_settings'
             ]
         );

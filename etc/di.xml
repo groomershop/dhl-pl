@@ -1,8 +1,7 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <type name="Magento\Checkout\Model\ShippingInformationManagement">
-        <plugin name="save-in-quote"
-                type="DHL\Dhl24pl\Model\Checkout\ShippingInformationManagementPlugin" sortOrder="10"/>
+        <plugin name="save-in-quote" type="DHL\Dhl24pl\Plugin\Checkout\ShippingInformationManagementPlugin" sortOrder="10"/>
     </type>
     <virtualType name="Magento\Sales\Model\ResourceModel\Order\Grid" type="Magento\Sales\Model\ResourceModel\Grid">
         <arguments>
@@ -11,5 +10,43 @@
             </argument>
         </arguments>
     </virtualType>
-
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="dhl_package_listing_data_source" xsi:type="string">DHL\Dhl24pl\Model\ResourceModel\Package\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+    <virtualType name="DHL\Dhl24pl\Model\ResourceModel\Package\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">dhl_packages</argument>
+            <argument name="resourceModel" xsi:type="string">DHL\Dhl24pl\Model\ResourceModel\Package</argument>
+        </arguments>
+    </virtualType>
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="dhl_sender_listing_data_source" xsi:type="string">DHL\Dhl24pl\Model\ResourceModel\Sender\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+    <virtualType name="DHL\Dhl24pl\Model\ResourceModel\Sender\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">dhl_senders</argument>
+            <argument name="resourceModel" xsi:type="string">DHL\Dhl24pl\Model\ResourceModel\Sender</argument>
+        </arguments>
+    </virtualType>
+    <type name="DHL\Dhl24pl\Model\Logger\Handler">
+        <arguments>
+            <argument name="filesystem" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
+        </arguments>
+    </type>
+    <type name="DHL\Dhl24pl\Model\Logger\ApiLogger">
+        <arguments>
+            <argument name="name" xsi:type="string">Dhl24pl_API_Log</argument>
+            <argument name="handlers"  xsi:type="array">
+                <item name="system" xsi:type="object">DHL\Dhl24pl\Model\Logger\Handler</item>
+            </argument>
+        </arguments>
+    </type>
 </config>

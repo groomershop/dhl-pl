@@ -3,13 +3,13 @@
     <update handle="styles"/>
     <head>
         <title>DHL24</title>
-        <script src="DHL_Dhl24pl::js/dhl24pl_pnp.js" />
+        <script src="DHL_Dhl24pl::js/dhl24pl_pnp.js"/>
         <css src="DHL_Dhl24pl::css/dhl24pl.css"/>
     </head>
     <body>
-
-		<referenceContainer name="content">
-            <block class="DHL\Dhl24pl\Block\Adminhtml\Shipment\Pnp" name="dhl_dhl24pl_shipment_pnp" template="DHL_Dhl24pl::pnp.phtml" />
+        <referenceContainer name="content">
+            <block class="DHL\Dhl24pl\Block\Adminhtml\Shipment\Pnp" name="dhl_dhl24pl_shipment_pnp"
+                   template="DHL_Dhl24pl::pnp.phtml"/>
         </referenceContainer>
     </body>
 </page>
