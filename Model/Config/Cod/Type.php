@@ -17,7 +17,7 @@ class Type implements OptionSourceInterface
     public function toOptionArray(): array
     {
         return [
-            ['value' => '', 'label' => __('')],
+            ['value' => '', 'label' => ''],
             ['value' => 'cashondelivery', 'label' => __('COD wbudowane w Magento')],
             ['value' => 'empty', 'label' => __('Brak COD')]
         ];
