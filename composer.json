@@ -2,6 +2,9 @@
     "name": "dhl/dhl24pl",
     "description": "DHL24 PL plugin",
     "type": "magento2-module",
+    "require": {
+        "myclabs/php-enum": "^1.0.0"
+    },
     "autoload": {
         "files": [
             "registration.php"
