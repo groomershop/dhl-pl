@@ -335,7 +335,8 @@ class Carrier extends AbstractCarrier implements CarrierInterface
      */
     protected function getQuote()
     {
-        return $this->checkoutSession->getQuote();
+        $quote_repository = $objectManager->get('\Magento\Quote\Api\CartRepositoryInterface');
+        return $quote_repository->get($this->checkoutSession->getQuoteId());      
     }
 
     /**
