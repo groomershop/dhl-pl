@@ -211,7 +211,7 @@
                 <field id="title_parcelshop" translate="label" type="text" sortOrder="9" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Title DHL Parcelshop</label>
                     <depends>
-                        <field id="active_cod">1</field>
+                        <field id="active_parcelshop">1</field>
                     </depends>
                 </field>
                 <field id="price_parcelshop" translate="label" sortOrder="10" showInDefault="1" canRestore="1">
@@ -226,7 +226,7 @@
                 <field id="title_parcelshop_cod" translate="label" type="text" sortOrder="12" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Title DHL Parcelshop Cash on Delivery</label>
                     <depends>
-                        <field id="active_cod">1</field>
+                        <field id="active_parcelshop_cod">1</field>
                     </depends>
                 </field>
                 <field id="price_parcelshop_cod" translate="label" type="text" sortOrder="13" showInDefault="1" showInWebsite="1" showInStore="0">
