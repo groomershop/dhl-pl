@@ -129,7 +129,7 @@ class Carrier extends AbstractCarrier implements CarrierInterface
 
         $result = $this->rateResultFactory->create();
 
-        $result->append($this->getCourierShippingRate());
+        $result->append($this->getCourierShippingRate($request));
 
         if($request->getDestCountryId() == 'PL') {
             if ($this->getConfigFlag('active_cod')) {
@@ -137,7 +137,7 @@ class Carrier extends AbstractCarrier implements CarrierInterface
             }
         }
 
-        $result->append($this->getParcelshopShippingMethod());
+        $result->append($this->getParcelshopShippingMethod($request));
 
         if($request->getDestCountryId() == 'PL') {
             if ($this->getConfigFlag('active_parcelshop_cod')) {
@@ -173,10 +173,10 @@ class Carrier extends AbstractCarrier implements CarrierInterface
     /**
      * @return mixed
      */
-    protected function getCourierShippingRate()
+    protected function getCourierShippingRate(RateRequest $request)
     {
         $countriesArray = $this->carrierCountryPriceHelper->getCountriesArray();
-        $countryId = $this->getQuote()->getShippingAddress()->getCountryId();
+        $countryId = $request->getDestCountryId();
 
         if(isset($countriesArray[$countryId]) && $countriesArray[$countryId]) {
             $method = $this->rateMethodFactory->create();
@@ -210,10 +210,10 @@ class Carrier extends AbstractCarrier implements CarrierInterface
     /**
      * @return mixed
      */
-    protected function getParcelshopShippingMethod()
+    protected function getParcelshopShippingMethod(RateRequest $request)
     {
         $countriesArray = $this->carrierCountryPriceHelper->getCountriesParcelshopArray();
-        $countryId = $this->getQuote()->getShippingAddress()->getCountryId();
+        $countryId = $request->getDestCountryId();
 
         if(isset($countriesArray[$countryId]) && $countriesArray[$countryId]) {
             $method = $this->rateMethodFactory->create();
@@ -326,16 +326,6 @@ class Carrier extends AbstractCarrier implements CarrierInterface
         $method->setPrice($price);
         $method->setCost(0);
         return $method;
-    }
-
-    /**
-     * @return \Magento\Quote\Api\Data\CartInterface|\Magento\Quote\Model\Quote
-     * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
-     */
-    protected function getQuote()
-    {
-        return $this->checkoutSession->getQuote();
     }
 
     /**
