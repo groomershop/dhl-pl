@@ -131,7 +131,7 @@ class Carrier extends AbstractCarrier implements CarrierInterface
 
         $result->append($this->getCourierShippingRate());
 
-        if($this->getQuote()->getShippingAddress()->getCountryId() == 'PL') {
+        if($request->getDestCountryId() == 'PL') {
             if ($this->getConfigFlag('active_cod')) {
                 $result->append($this->getCashOnDelivery());
             }
@@ -139,21 +139,21 @@ class Carrier extends AbstractCarrier implements CarrierInterface
 
         $result->append($this->getParcelshopShippingMethod());
 
-        if($this->getQuote()->getShippingAddress()->getCountryId() == 'PL') {
+        if($request->getDestCountryId() == 'PL') {
             if ($this->getConfigFlag('active_parcelshop_cod')) {
                 $result->append($this->getParcelshopCashOnDelivery());
             }
 
-            if(!empty($this->getQuote()->getShippingAddress()->getPostcode())) {
-                if ($this->getConfigFlag('active_evening') && $this->getPostalCodeServicesByPostCode($this->getQuote()->getShippingAddress()->getPostcode())->deliveryEvening) {
+            if(!empty($request->getDestPostcode())) {
+                if ($this->getConfigFlag('active_evening') && $this->getPostalCodeServicesByPostCode($request->getDestPostcode())->deliveryEvening) {
                     $result->append($this->getEvening());
                 }
 
-                if ($this->getConfigFlag('active_dhl12') && $this->getPostalCodeServicesByPostCode($this->getQuote()->getShippingAddress()->getPostcode())->domesticExpress12) {
+                if ($this->getConfigFlag('active_dhl12') && $this->getPostalCodeServicesByPostCode($request->getDestPostcode())->domesticExpress12) {
                     $result->append($this->getDhl12());
                 }
 
-                if ($this->getConfigFlag('active_dhl09') && $this->getPostalCodeServicesByPostCode($this->getQuote()->getShippingAddress()->getPostcode())->domesticExpress9) {
+                if ($this->getConfigFlag('active_dhl09') && $this->getPostalCodeServicesByPostCode($request->getDestPostcode())->domesticExpress9) {
                     $result->append($this->getDhl09());
                 }
             }
@@ -335,8 +335,7 @@ class Carrier extends AbstractCarrier implements CarrierInterface
      */
     protected function getQuote()
     {
-        $quote_repository = $objectManager->get('\Magento\Quote\Api\CartRepositoryInterface');
-        return $quote_repository->get($this->checkoutSession->getQuoteId());      
+        return $this->checkoutSession->getQuote();
     }
 
     /**
