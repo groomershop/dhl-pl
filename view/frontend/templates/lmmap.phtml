@@ -13,7 +13,19 @@
         name += ', ' + point.zip + ' ' + point.city;
         window.opener.document.getElementById('parceslhop_desc').innerHTML=name;
 
-
+        const shippingPointIdInput = window.opener.document.querySelector(
+            '[name="swissup_checkout_field[shipping_point_id]"]'
+        );
+        if (shippingPointIdInput !== null) {
+            shippingPointIdInput.value = point.sap;
+        }
+        
+        const shippingPointNameInput = window.opener.document.querySelector(
+            '[name="swissup_checkout_field[shipping_point_name]"]'
+        );
+        if (shippingPointNameInput !== null) {
+            shippingPointNameInput.value = name;
+        }
 
         self.close();
     }
