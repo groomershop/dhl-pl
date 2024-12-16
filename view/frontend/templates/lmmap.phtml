@@ -13,11 +13,13 @@
         name += ', ' + point.zip + ' ' + point.city;
         window.opener.document.getElementById('parceslhop_desc').innerHTML=name;
 
+        const keyUpEvent = new Event('keyup');
         const shippingPointIdInput = window.opener.document.querySelector(
             '[name="swissup_checkout_field[shipping_point_id]"]'
         );
         if (shippingPointIdInput !== null) {
             shippingPointIdInput.value = point.sap;
+            shippingPointIdInput.dispatchEvent(keyUpEvent);
         }
         
         const shippingPointNameInput = window.opener.document.querySelector(
@@ -25,12 +27,9 @@
         );
         if (shippingPointNameInput !== null) {
             shippingPointNameInput.value = name;
+            shippingPointNameInput.dispatchEvent(keyUpEvent);
         }
-
-        const keyUpEvent = new Event('keyup');
-        shippingPointIdInput.dispatchEvent(keyUpEvent);
-        shippingPointNameInput.dispatchEvent(keyUpEvent);
-
+        
         self.close();
     }
     if (window.addEventListener) {
