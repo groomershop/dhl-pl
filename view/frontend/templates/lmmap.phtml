@@ -27,6 +27,10 @@
             shippingPointNameInput.value = name;
         }
 
+        const keyUpEvent = new Event('keyup');
+        shippingPointIdInput.dispatchEvent(keyUpEvent);
+        shippingPointNameInput.dispatchEvent(keyUpEvent);
+
         self.close();
     }
     if (window.addEventListener) {
